@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <link href="{{ theme_static('pack.css') }}" rel="stylesheet" />
+    {%- block style %}{% endblock -%}
+    <script type="text/javascript" src="{{ main_script_url() }}"></script>
+    {%- block script %}{% endblock %}
+</head>
+<body>
+    <div class="header">
+        <div class="menu-wrapper">
+            <a href="{{ url_for('home.index') }}" class="logo">
+                单词仓库
+            </a>
+            {%- set nav_bar = [
+                ('mine', '', '仓库'),
+                ('group', '', '入库'),
+                ('user', '', '设置'),
+            ] -%}
+            <ul class="menu unstyled">
+                {%- for id, href, caption in nav_bar -%}
+                    <li><a {% if id == active_nav %}class="checked" {% endif %}href="{{ href }}">{{ caption }}</a></li>
+                {%- endfor -%}
+            </ul>
+
+            {% set user = get_user() %}
+            <ul id="top_user_info" class="user unstyled">
+                {% if user %}
+                    <li class="info-handle">
+                        <span>{{ user.nickname }}</span>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('account.logout') }}" class="btn">退出登陆</a>
+                    </li>
+                {% else %}
+                    <li><a href="{{ url_for('account.login') }}?next={{ request.path }}">登录</a></li>
+                    <li><a href="{{ url_for('account.register') }}">注册</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="body">
+    {%- block body %}{% endblock -%}
+    </div>
+    <div id="top_message_wrapper" class="top-messager">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <label class="alert alert-{{ category or 'warning' }}">{{ message }}</label>
+                {% endfor %}
+            {% else %}
+                <label class="alert alert-warning">{% block alert %}{% endblock %}</label>
+            {% endif %}
+        {% endwith %}
+        <script type="text/javascript">
+            window.addEvent('domready', function () {
+                //$g.initAlert('top_message_wrapper');
+            });
+        </script>
+    </div>
+    <div class="footer">
+        <div class="text">
+            Copyleft: Lobos 2012  Powered by flask, bootstrap, lesscss, mootools
+        </div>
+    </div>
+</body>
+</html>

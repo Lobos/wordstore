@@ -1,0 +1,66 @@
+/* miftree ============================================= */
+.mif-tree-wrapper {
+    position: relative;
+    width: 100%;
+    height:100%;
+    margin:0;
+    padding:0;
+    line-height:19px;
+    white-space:nowrap;
+    cursor:default;
+
+    &:focus { outline: 0; }
+    span{ padding-bottom:2px; margin:2px 0; cursor:inherit; }
+
+    .mif-tree-bg{ width:100%; height:100%; position:absolute; overflow:hidden; }
+    .mif-tree-bg-container{ width:100%; display:none; }
+    .mif-tree-bg-node{ width:100%; height:17px; margin:1px 0; }
+    .mif-tree-bg-selected{ background-color:#FFFFCC; color:#000; }
+
+    .mif-tree-children{ padding-left:19px; width:19px; }
+    .mif-tree-node{ width:19px; position:static; }
+    .mif-tree-node-last{  }
+    
+    .mif-tree-name { 
+        cursor: default;
+        overflow:hidden;
+        color:#666;
+        padding:0 5px;
+        height:18px;
+        
+        a {
+            color:red;
+            &:hover { color: blue; }
+        }
+    }
+    .mif-tree-node-wrapper{  }
+    /*@gadjets*/
+    .mif-tree-gadjet{ background:url('images/miftree/gadjets.png') no-repeat; padding-right: 19px; z-index:1; overflow:hidden; cursor:default; }
+    .mif-tree-gadjet-none{ background:none; }
+    .mif-tree-gadjet-minus{ background-position: 0 50%; }
+    .mif-tree-gadjet-plus{ background-position: -19px 50%; }
+    .mif-tree-gadjet-hover .mif-tree-gadjet-minus{ background-position: -57px 50%; }
+    .mif-tree-gadjet-hover .mif-tree-gadjet-plus{ background-position: -76px 50%; }
+    /*@icons*/
+    .mif-tree-icon{ padding-right:18px; background-position:0 50%; background-repeat:no-repeat; cursor:inherit; }
+    .mif-tree-open-icon{ background:url('images/miftree/openicon.gif') no-repeat; }
+    .mif-tree-close-icon{ background:url('images/miftree/closeicon.gif') no-repeat; }
+    /*@selection*/
+    .mif-tree-node-selected .mif-tree-name { color:#000; font-weight:bold; }
+    .mif-tree-highlighter{ height:19px; overflow:hidden; width:100%; background:#b64553; position:absolute; }
+    .mif-tree-drag-current{ background-color:#cfcfd8; }
+    .mif-tree-replace{ background-color:#99c8fb; }
+    /*@checkbox*/
+    .mif-tree-checkbox{ padding-left:19px; background:url('images/miftree/checkboxes.png') no-repeat; }
+    .mif-tree-node-checked{ background-position:0 center; }
+    .mif-tree-node-unchecked{ background-position:-19px center; }
+    .mif-tree-node-nochecked{ background-position:-114px center; }
+    .mif-tree-hover-checkbox .mif-tree-node-checked{ background-position:-38px center; }
+    .mif-tree-hover-checkbox .mif-tree-node-unchecked{ background-position:-57px center; }
+    .mif-tree-node-partially{ background-position:-76px center; }
+    .mif-tree-hover-checkbox .mif-tree-node-partially{ background-position:-95px center; }
+
+    .mif-tree-loader-open-icon,.mif-tree-loader-close-icon{ background-image:url('images/miftree/mootree_loader.gif'); }
+}
+
+
