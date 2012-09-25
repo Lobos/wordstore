@@ -5,6 +5,7 @@ from flask import session, request, redirect, url_for, jsonify
 from ..models import UserInfo
 from utils import pydes, json
 from .. import db, config
+import cache
 
 SESSION_USER = 'user'
 COOKIE_USER = '_wsid'
@@ -15,7 +16,7 @@ def login(email, password):
         return None
     model = db.User.login(email, password)
     if model:
-        user_data = UserInfo(model['_id'], model['nickname'], model['email'], model['status'])
+        user_data = UserInfo(model['_id'], model['nickname'], model['email'], model.word_count())
         session[SESSION_USER] = user_data
         return user_data
     else:
@@ -81,3 +82,11 @@ def require_login(json=False):
         return func
     return decorator
 
+def check_invitation(code):
+    return True
+    lst = cache.get_invitation_codes()
+    suc = code in lst
+    if suc:
+        db.invitation.remove({'code': code})
+        cache.clear_invitation()
+    return suc

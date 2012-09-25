@@ -32,7 +32,7 @@
                         <span>{{ user.nickname }}</span>
                     </li>
                     <li>
-                        <a href="{{ url_for('account.logout') }}" class="btn">退出登陆</a>
+                        <a href="{{ url_for('account.logout') }}">退出登陆</a>
                     </li>
                 {% else %}
                     <li><a href="{{ url_for('account.login') }}?next={{ request.path }}">登录</a></li>
@@ -58,7 +58,7 @@
         {% endwith %}
         <script type="text/javascript">
             window.addEvent('domready', function () {
-                //$g.initAlert('top_message_wrapper');
+                $g.initAlert('top_message_wrapper');
             });
         </script>
     </div>

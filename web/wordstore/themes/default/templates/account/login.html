@@ -1,5 +1,47 @@
-{% extends theme('base.html') %}
-{% block title %}用户登陆{% endblock %}
+{%- extends theme('base.html') -%}
+{%- import theme('_context.html') as h -%}
+{%- import theme('_forms.html') as f -%}
+{% block title %}登录{% endblock %}
 {% block body %}
+    {% call h.title('用户登录') %}{% endcall %}
+    <div style="margin: 20px 0; height: 300px;">
+        {% call f.form('login_form') %}
+            {% call f.control('邮箱', '') %}
+                {{ f.input(name="email", id="email", validate="{required:true, type:'email'}") }}
+            {% endcall %}
 
+            {% call f.control('密码', '') %}
+                {{ f.input(name="password", type="password", validate="{required:true}") }}
+            {% endcall %}
+
+            {% call f.control('') %}
+                {{ f.checkbox('remember', text='下次自动登录') }}
+            {% endcall %}
+
+            {% call f.control('') %}
+                <button type="submit" id="btn_login" class="btn btn-primary">登 录</button>
+                <a style="margin-left: 5px;" href="">忘了密码?</a>
+                <a style="margin-left: 5px; display: none;" href="{{ url_for('account.register') }}">注册账号</a>
+            {% endcall %}
+        {% endcall %}
+    </div>
+    <script type="text/javascript">
+        (function () {
+            $('email').focus();
+            var validator = $g.initValidator('login_form', { successHtml: '' });
+            $('btn_login').addEvent('click', function (event) {
+                event.preventDefault();
+                $g.saveForm({
+                    button: this,
+                    form: 'login_form',
+                    validator: validator,
+                    url: '{{ url_for(".login") }}',
+                    success: function (json) {
+                        var data = { status: json.status == 1 };
+                        window.location.href = '{{ next }}';
+                    }
+                });
+            });
+        })();
+    </script>
 {% endblock %}

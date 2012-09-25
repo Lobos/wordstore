@@ -3,16 +3,32 @@ from datetime import datetime
 from flask import request
 from flaskext.mongokit import Document
 from utils import md5, cn_time_now
+from . import max_length
+from word import Word
 
 class User(Document):
     __collection__ = 'admin'
     structure = {
-        'name': unicode,
+        'nickname': unicode,
         'email': unicode,
         'password': unicode,
         'login_ip': unicode,
-        'login_time': datetime
+        'login_time': datetime,
+        'create_time': datetime,
+        'words': [Word]
     }
+
+    use_autorefs = True
+    required_fields = ['password', 'email']
+    default_values = {
+        'words': []
+    }
+    validators = {
+        'nickname': max_length(18)
+    }
+    indexes = [{
+        'fields': 'email', 'unique': True
+    }]
 
     @staticmethod
     def encode_pwd(pwd):
@@ -29,7 +45,11 @@ class User(Document):
             model.save()
         return model
 
-class UserInfo():
+    def word_count(self):
+        return len(self['words'])
+
+
+class UserInfo(object):
     def __init__(self, id, nickname, email, count):
         self.id = id
         self.nickname = nickname

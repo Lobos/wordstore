@@ -2,7 +2,7 @@
 
 DEBUG = True
 DEV = True
-SECRET_KEY = u"i*423^s~9l%Jd*2#"
+SECRET_KEY = "i*423^s~9l%Jd*2#"
 DES_KEY = "a2!D7=eE"
 DEFAULT_THEME = "default"
 SITE_NAME = u"wordstore"

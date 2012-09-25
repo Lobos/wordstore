@@ -2,8 +2,8 @@
 from flask import request, jsonify, redirect, url_for
 
 def register_db(db):
-    from models import User
-    db.register([User])
+    from models import User, Invitation, Word
+    db.register([User, Invitation, Word])
 
 def register_views(app):
     from views import home, account

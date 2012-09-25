@@ -10,6 +10,9 @@ def render(template, **context):
 def render_json(msg, status=0, **kwargs):
     return jsonify(msg=msg, status=status, **kwargs)
 
+def render_success(msg='', **kwargs):
+    return render_json(msg, status=1, **kwargs)
+
 def get_theme():
     return config.DEFAULT_THEME
 

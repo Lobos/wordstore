@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import math, os
+import math
 from datetime import datetime, timedelta
 import time, random
 
@@ -53,15 +53,3 @@ def _get_index():
 def radix_str(num,b,numerals="0123456789abcdefghijklmnopqrstuvwxyz"):
     return ((num == 0) and numerals[0]) or (radix_str(num // b, b, numerals).lstrip(numerals[0]) + numerals[num % b])
 
-def get_parent_path(strPath):
-    if not strPath:
-        return None
-
-    lsPath = os.path.split(strPath)
-    print(lsPath)
-    print("lsPath[1] = %s" %lsPath[1])
-    if lsPath[1]:
-        return lsPath[0]
-
-    lsPath = os.path.split(lsPath[0])
-    return lsPath[0]
