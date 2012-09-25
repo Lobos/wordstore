@@ -8,5 +8,12 @@ class Word(Document):
     structure = {
         'word': unicode,
         'user_id': ObjectId,
-        'add_time': datetime
+        'meaning': unicode,
+        'symbol': unicode,
+        'audio': unicode,
+        'sentence': unicode,
+        'note': unicode,
+        'add_time': datetime,
     }
+
+    required_fields = ['word', 'user_id']
