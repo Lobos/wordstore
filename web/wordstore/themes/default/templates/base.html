@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}单词仓库{% endblock %}</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
     <link href="{{ theme_static('pack.css') }}" rel="stylesheet" />
     {%- block style %}{% endblock -%}
@@ -16,7 +16,7 @@
             </a>
             {%- set nav_bar = [
                 ('mine', '', '我的词库'),
-                ('group', '', '增加'),
+                ('add', url_for('word.add'), '增加'),
             ] -%}
             <ul class="menu unstyled">
                 {%- for id, href, caption in nav_bar -%}

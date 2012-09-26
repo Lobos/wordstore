@@ -1,0 +1,48 @@
+{%- extends theme('base.html') -%}
+{%- import theme('_context.html') as h -%}
+{%- import theme('_forms.html') as f -%}
+{% set active_nav = 'add' %}
+{% block body %}
+    {% call h.title('单词入库') %}{% endcall %}
+    <div class="content" id="add_form">
+        <div class="control-group">
+            {{ f.textarea(id='ta_words') }}<br />
+            一行一个单词或词组，最多200条
+        </div>
+        <div class="control-group">
+            <button type="button" id="btn_words" class="btn btn-primary">确 定</button>
+        </div>
+    </div>
+    <div class="content" id="word_list"></div>
+    <script type="text/javascript">
+        (function () {
+            var getSingle = function (el, next) {
+
+            };
+
+            var wordlist = $('word_list');
+            var createWord = function (word) {
+                var outer = new Element('dl', {
+                    'class': 'word'
+                }).inject(wordlist);
+                new Element('dt', {
+                    'html': 'word'
+                }).inject(outer);
+            };
+
+            $('btn_words').addEvent('click', function() {
+                var words = $('ta_words').get('value').split('\n').filter(function (w) {
+                    if (w.trim().length == 0)
+                        return false;
+                    createWord(w);
+                    return true;
+                });
+                if (words.length == 0) {
+                    $g.alert('至少填一个单词.', 'error');
+                } else {
+                    $('add_form').slide('out');
+                }
+            });
+        })();
+    </script>
+{% endblock %}

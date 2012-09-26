@@ -4,7 +4,7 @@
 {% block title %}登录{% endblock %}
 {% block body %}
     {% call h.title('用户登录') %}{% endcall %}
-    <div style="margin: 20px 0; height: 300px;">
+    <div class="content">
         {% call f.form('login_form') %}
             {% call f.control('邮箱', '') %}
                 {{ f.input(name="email", id="email", validate="{required:true, type:'email'}") }}
