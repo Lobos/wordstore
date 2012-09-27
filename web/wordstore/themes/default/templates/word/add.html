@@ -16,8 +16,12 @@
     <div class="content" id="word_list"></div>
     <script type="text/javascript">
         (function () {
-            var getSingle = function (el, next) {
-
+            var prepare = function (el) {
+                var word = el.retrieve('word');
+                new Request.HTML({
+                    url: '{{ url_for(".get") }}' + word,
+                    update: el.getElement('dd')
+                }).get();
             };
 
             var wordlist = $('word_list');
@@ -25,9 +29,11 @@
                 var outer = new Element('dl', {
                     'class': 'word'
                 }).inject(wordlist);
+                outer.store('word', word);
                 new Element('dt', {
-                    'html': 'word'
+                    'html': word
                 }).inject(outer);
+                new Element('dd').inject(outer);
             };
 
             $('btn_words').addEvent('click', function() {
@@ -42,6 +48,8 @@
                 } else {
                     $('add_form').slide('out');
                 }
+
+                prepare(wordlist.getFirst());
             });
         })();
     </script>
