@@ -18,10 +18,10 @@
         (function () {
             var prepare = function (el) {
                 var word = el.retrieve('word');
-                new Request.HTML({
-                    url: '{{ url_for(".get") }}' + word,
-                    update: el.getElement('dd')
-                }).get();
+                Dictionary.exec('{{ url_for(".iciba") }}' + word, function (dict) {
+                    //el.getElement('dd').set('html', JSON.encode(dict));
+                    var form = new Element('form').inject(el.getElement('dd'));
+                });
             };
 
             var wordlist = $('word_list');

@@ -10,7 +10,3 @@ def main_script_url():
         script_name = 'pack-script.js'
 
     return url_for('static', filename='js/' + script_name)
-
-def generate_get_word():
-    from iciba import get_word
-    return get_word

@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
 
-from flask import Blueprint, request
+from flask import Blueprint, request, make_response
+from utils import proxy
 from .. import db, app
-from .. helpers import user, generate_get_word
+from .. helpers import user
 from . import render, render_json, render_success
 
 bp = Blueprint('word', __name__)
@@ -17,12 +18,14 @@ def index():
 def add():
     return render('word/add.html')
 
-@bp.route('/word/get/')
-@bp.route('/word/get/<word>')
+@bp.route('/word/iciba/')
+@bp.route('/word/iciba/<word>')
 @user.require_login()
-def get(word):
+def iciba(word = None):
     if not word:
         return render_json('')
-    data = generate_get_word()(word)
-    return render('word/_dd.html', data = data)
+    url = 'http://dict-co.iciba.com/api/dictionary.php?w=' + word
+    resp = make_response(proxy(url).replace('\n', ''))
+    resp.mimetype = 'text/xml'
+    return resp
 

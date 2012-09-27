@@ -60,3 +60,7 @@ def get_gravatar(email, size=48, avatar=None):
 
 def get_avatar(id, email, size=48):
     return get_gravatar(email, size)
+
+def proxy(url):
+    content = urllib2.urlopen(url).read()
+    return content

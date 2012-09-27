@@ -13,6 +13,7 @@ JS_LIST = {
         LAB_COMMON + 'mootools-more-1.4.0.1.js',
         LAB_COMMON + 'mootools-exts.js',
         LAB_COMMON + 'form-validator.js',
+        LAB_COMMON + 'dictionary.js',
         LAB_LOCAL + 'global.js',
     ]
 }
