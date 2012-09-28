@@ -16,40 +16,27 @@
     <div class="content" id="word_list"></div>
     <script type="text/javascript">
         (function () {
-            var prepare = function (el) {
-                var word = el.retrieve('word');
-                Dictionary.exec('{{ url_for(".iciba") }}' + word, function (dict) {
-                    //el.getElement('dd').set('html', JSON.encode(dict));
-                    var form = new Element('form').inject(el.getElement('dd'));
-                });
-            };
-
-            var wordlist = $('word_list');
-            var createWord = function (word) {
-                var outer = new Element('dl', {
-                    'class': 'word'
-                }).inject(wordlist);
-                outer.store('word', word);
-                new Element('dt', {
-                    'html': word
-                }).inject(outer);
-                new Element('dd').inject(outer);
-            };
-
+            var dict = new Dictionary('word_list', {
+                api: {
+                    'iciba': '{{ url_for(".iciba") }}'
+                },
+                onComplete: function () {
+                    $('add_form').slide('in');
+                }
+            });
             $('btn_words').addEvent('click', function() {
                 var words = $('ta_words').get('value').split('\n').filter(function (w) {
-                    if (w.trim().length == 0)
-                        return false;
-                    createWord(w);
-                    return true;
+                    return w.trim().length > 0;
                 });
+
                 if (words.length == 0) {
                     $g.alert('至少填一个单词.', 'error');
-                } else {
-                    $('add_form').slide('out');
+                    return;
                 }
 
-                prepare(wordlist.getFirst());
+                $('ta_words').set('value', '');
+                $('add_form').slide('out');
+                dict.addWords(words).showFirst();
             });
         })();
     </script>

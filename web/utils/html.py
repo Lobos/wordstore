@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import math, hashlib, urllib, urllib2
+import math, hashlib, urllib, urllib2, urlparse
 import pymongo
 from flask import request
 
@@ -62,5 +62,7 @@ def get_avatar(id, email, size=48):
     return get_gravatar(email, size)
 
 def proxy(url):
+    #url 不能为unicode，要转为utf-8
+    url = url.encode('utf-8')
     content = urllib2.urlopen(url).read()
     return content
