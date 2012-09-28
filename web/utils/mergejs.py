@@ -38,6 +38,9 @@ def _execute(in_files, out_file, temp_file='.temp'):
         pack_mtime = -1
     else:
         pack_mtime = os.path.getmtime(out_file)
+        if os.path.isfile(temp_file):
+            temp_time = os.path.getmtime(temp_file)
+            pack_mtime = temp_time if temp_time < pack_mtime else temp_time
 
     if pack_mtime >= js_mtime:
         return
