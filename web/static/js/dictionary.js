@@ -191,8 +191,12 @@
             new Request({
                 url: url,
                 onSuccess: function (text, xml) {
-                    var dict = parse(xml);
-                    fn(dict);
+                    if (text == 'error') {
+                        fn({ status: 0 });
+                    } else {
+                        var dict = parse(xml);
+                        fn(dict);
+                    }
                 },
                 onFailure: function () {
                     fn({ status: 0 });
