@@ -1,5 +1,8 @@
 <p>
     [<span class="ps">{{ model.ps }}</span>]
+    <i onclick="this.getFirst().play()" class="icon-audio">
+        <audio><source src="{{ model.pron }}" type="audio/mp3"></audio>
+    </i>
 </p>
 <p>
     {{ model.pos }} &nbsp;{{ model.acceptation }}

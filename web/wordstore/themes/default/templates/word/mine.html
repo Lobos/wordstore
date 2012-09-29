@@ -6,7 +6,7 @@
     <div class="content" id="word_list">
         {% for m in models %}
         <dl class="word" id="{{ m._id }}">
-            <dt>
+            <dt style="cursor:pointer;">
                 <span class="span5">{{ m.word }}</span>
                 <span class="span2 span">{{ m.add_time|format_datetime }}</span>
                 <a class="remove span" href="javascript:;">× 删除</a>
@@ -22,22 +22,23 @@
                 },
                 'mouseout': function () {
                     this.removeClass('active');
-                },
-                'click': function () {
-                    var dd = this.getElement('dd');
-                    if (dd) {
-                        if (dd.isVisible())
-                            dd.slide('out');
-                        else
-                            dd.slide('in');
-                    } else {
-                        dd = new Element('dd', {'class': 'active'}).inject(this);
-                        var id = this.get('id');
-                        new Request.HTML({
-                            url: '{{ url_for(".single") }}' + id,
-                            update: dd
-                        }).get();
-                    }
+                }
+            });
+
+            $$('#word_list dt').addEvent('click', function (event) {
+                if (event.target.get('tag') == 'a')
+                    return;
+
+                var dd = this.getParent().getElement('dd');
+                if (dd) {
+                    dd.slide('toggle');
+                } else {
+                    dd = new Element('dd', {'class': 'active'}).inject(this, 'after');
+                    var id = this.getParent().get('id');
+                    new Request.HTML({
+                        url: '{{ url_for(".single") }}' + id,
+                        update: dd
+                    }).get();
                 }
             });
 

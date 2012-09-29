@@ -151,7 +151,8 @@
                 }).inject(dd);
 
                 if (dict.status == 1) {
-                    var temp = '<label class="radio"><input type="radio" name="ps" {check} /><span class="ps">[{ps}]</span></label>';
+                    var temp = '<label class="radio"><input type="radio" name="ps" {check} /><span class="ps">[{ps}]</span>' +
+                                '<i class="icon-audio"><audio><source src="{pron}" type="audio/mp3"></audio></i></label>';
                     _control('读音', temp, dict.ps, form);
 
                     temp = '<label class="radio"><input type="radio" name="pos" {check} />{pos} {acceptation}</label>';
@@ -159,6 +160,10 @@
 
                     temp = '<label class="radio"><input type="radio" name="sent" {check} />{orig}<br />{trans}</label>';
                     _control('例句', temp, dict.sent, form);
+
+                    el.getElements('i.icon-audio').addEvent('click', function () {
+                        this.getElement('audio').play();
+                    });
                 }
 
                 var note = '<div class="control-group"><label class="control-label">笔记</label><div class="controls"><textarea rows="4" class="span6 note"></textarea></div></div>';
