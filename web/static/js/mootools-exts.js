@@ -30,16 +30,6 @@
         unloading: function () {
             this.unmask();
             return this;
-        },
-
-        isHidden: function(){
-            var w = this.offsetWidth, h = this.offsetHeight,
-                force = (this.tagName.toLowerCase() === 'tr');
-            return (w===0 && h===0 && !force) ? true : ((w!==0 && h!==0 && !force) ? false : this.getStyle('display') === 'none') || (this.get('opacity') == 0);
-        },
-
-        isVisible: function(){
-            return !this.isHidden();
         }
     });
 

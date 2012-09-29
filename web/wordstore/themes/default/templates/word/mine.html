@@ -1,0 +1,60 @@
+{%- extends theme('base.html') -%}
+{%- import theme('_context.html') as h -%}
+{% set active_nav = 'mine' %}
+{% block body %}
+    {% call h.title('我的词库') %}{% endcall %}
+    <div class="content" id="word_list">
+        {% for m in models %}
+        <dl class="word" id="{{ m._id }}">
+            <dt>
+                <span class="span5">{{ m.word }}</span>
+                <span class="span2 span">{{ m.add_time|format_datetime }}</span>
+                <a class="remove span" href="javascript:;">× 删除</a>
+            </dt>
+        </dl>
+        {% endfor %}
+    </div>
+    <script type="text/javascript">
+        (function () {
+            $$('#word_list > .word').addEvents({
+                'mouseover': function () {
+                    this.addClass('active');
+                },
+                'mouseout': function () {
+                    this.removeClass('active');
+                },
+                'click': function () {
+                    var dd = this.getElement('dd');
+                    if (dd) {
+                        if (dd.isVisible())
+                            dd.slide('out');
+                        else
+                            dd.slide('in');
+                    } else {
+                        dd = new Element('dd', {'class': 'active'}).inject(this);
+                        var id = this.get('id');
+                        new Request.HTML({
+                            url: '{{ url_for(".single") }}' + id,
+                            update: dd
+                        }).get();
+                    }
+                }
+            });
+
+            $$('#word_list a.remove').addEvent('click', function () {
+                var dl = this.getParent('dl');
+                dl.loading();
+                var id = dl.get('id');
+                new Request.JSON({
+                    url: '{{ url_for(".remove") }}',
+                    data: { id: id },
+                    onSuccess: function (json) {
+                        dl.unloading();
+                        if (json.status == 1)
+                            dl.nix(true);
+                    }
+                }).send();
+            });
+        })();
+    </script>
+{% endblock %}

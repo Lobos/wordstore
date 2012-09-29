@@ -17,6 +17,7 @@
     <script type="text/javascript">
         (function () {
             var dict = new Dictionary('word_list', {
+                saveUrl: '{{ url_for(".add") }}',
                 api: {
                     'iciba': '{{ url_for(".iciba") }}'
                 },

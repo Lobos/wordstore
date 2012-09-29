@@ -1,5 +1,16 @@
-{%- set _k = get_uid() -%}
-{%- import theme('_forms.html') as f -%}
-{%- call f.form('form_' + _k) -%}
-    {{ data['key'] }}
-{%- endcall -%}
+<p>
+    [<span class="ps">{{ model.ps }}</span>]
+</p>
+<p>
+    {{ model.pos }} &nbsp;{{ model.acceptation }}
+</p>
+{%- if model.orig -%}
+<p>
+    {{ model.orig }}<br />
+    {{ model.trans }}
+</p>
+{%- endif -%}
+{%- if model.note -%}
+    <p>{{ model.note }}</p>
+{%- endif -%}
+

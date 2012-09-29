@@ -15,7 +15,7 @@
                 单词仓库
             </a>
             {%- set nav_bar = [
-                ('mine', '', '我的词库'),
+                ('mine', url_for('word.mine'), '我的词库'),
                 ('add', url_for('word.add'), '增加'),
             ] -%}
             <ul class="menu unstyled">

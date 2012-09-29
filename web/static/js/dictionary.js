@@ -8,6 +8,7 @@
         Implements: [Options, Events],
 
         options: {
+            saveUrl: null,
             api: {
                 'iciba': 'http://dict-co.iciba.com/api/dictionary.php?w='
             }
@@ -31,8 +32,8 @@
                 'class': 'word'
             }).inject(this.container).store('word', word);
 
-            new Element('dt', {
-                'html': word
+            var dt = new Element('dt', {
+                'html': word + '<i class="load"></i>'
             }).inject(outer);
 
             new Element('dd').inject(outer);
@@ -57,7 +58,7 @@
                 this.fireEvent('complete');
                 return this;
             }
-            el.addClass('activated');
+            el.addClass('active');
             var next = el.getNext();
             if (next)
                 this.prepare(next);
@@ -83,36 +84,49 @@
                     '</div>').substitute({label: label});
                 var ct = Elements.from(ct_str)[0].inject(form);
                 cc = ct.getElement('.controls');
-                data.each(function (d) {
+                data.each(function (d, i) {
+                    Object.merge(d, {
+                        check: i == 0 ? 'checked="checked"' : ''
+                    });
                     var item = Elements.from(temp.substitute(d))[0].inject(cc);
                     item.getElement('input').store('data', d);
                 });
             };
 
             var _createButtons = function (status, wrapper) {
-                if (status == 0) {
-                    new Element('button', {
-                        'html': '重 试',
-                        'type': 'button',
-                        'class': 'btn warning',
-                        'events': {
-                            'click': function () {
-                                self.prepare(el);
-                            }
-                        }
-                    }).inject(wrapper);
-                } else {
+                if (status == 1) {
                     new Element('button', {
                         'html': '加入仓库',
                         'type': 'button',
                         'class': 'btn success',
                         'events': {
                             'click': function () {
-
+                                self.saveWord(el);
+                            }
+                        }
+                    }).inject(wrapper);
+                    new Element('button', {
+                        'html': '取消选择',
+                        'type': 'button',
+                        'class': 'btn warning',
+                        'events': {
+                            'click': function () {
+                                el.getElements('input[type="radio"]').removeProperty('checked');
                             }
                         }
                     }).inject(wrapper);
                 }
+
+                new Element('button', {
+                    'html': '重 试',
+                    'type': 'button',
+                    'class': 'btn warning',
+                    'events': {
+                        'click': function () {
+                            self.prepare(el);
+                        }
+                    }
+                }).inject(wrapper);
 
                 new Element('button', {
                     'html': '放 弃',
@@ -128,32 +142,60 @@
             };
 
             var dd = el.getElement('dd').empty();
+            var loading = el.getElement('dt > .load');
+            loading.addClass('show');
             this.exec(api, url, function (dict) {
-                var btn_container = new Element('div', {
-                    'class': 'control-group'
-                });
-
-                if (dict.status == 0) {
-                    btn_container.inject(dd);
-                    _createButtons(dict.status, btn_container);
-                    return;
-                }
-
+                loading.removeClass('show');
                 var form = new Element('form', {
                     'class': 'form-horizontal'
                 }).inject(dd);
-                var temp = '<label class="radio"><input type="radio" name="ps" value="" />{ps}</label>';
-                _control('读音', temp, dict.ps, form);
 
-                temp = '<label class="radio"><input type="radio" name="pos" value="" />{pos} {acceptation}</label>';
-                _control('释义', temp, dict.pos, form);
+                if (dict.status == 1) {
+                    var temp = '<label class="radio"><input type="radio" name="ps" {check} /><span class="ps">[{ps}]</span></label>';
+                    _control('读音', temp, dict.ps, form);
 
-                temp = '<label class="radio"><input type="radio" name="sent" value="" />{orig}<br />{trans}</label>';
-                _control('例句', temp, dict.sent, form);
+                    temp = '<label class="radio"><input type="radio" name="pos" {check} />{pos} {acceptation}</label>';
+                    _control('释义', temp, dict.pos, form);
 
-                btn_container.inject(form);
+                    temp = '<label class="radio"><input type="radio" name="sent" {check} />{orig}<br />{trans}</label>';
+                    _control('例句', temp, dict.sent, form);
+                }
+
+                var note = '<div class="control-group"><label class="control-label">笔记</label><div class="controls"><textarea rows="4" class="span6 note"></textarea></div></div>';
+                Elements.from(note)[0].inject(form);
+
+                var btn_container = new Element('div', {
+                    'class': 'control-group'
+                }).inject(form);
                 _createButtons(dict.status, btn_container);
             });
+        },
+
+        saveWord: function (element) {
+            var data = {
+                word: element.retrieve('word'),
+                note: element.getElement('.note').get('value')
+            };
+            element.getElements('input[type="radio"]:checked').each(function (el) {
+                Object.merge(data, el.retrieve('data'));
+            });
+
+            if (this.options.saveUrl == null) return;
+            new Request.JSON({
+                url: this.options.saveUrl,
+                data: data,
+                onSuccess: function (json) {
+                    if (json.status == 1) {
+                        this.show(element.getNext());
+                        element.nix(true);
+                    } else {
+                        alert(json.msg);
+                    }
+                }.bind(this),
+                onFailure: function () {
+                    alert('系统出错了..')
+                }
+            }).send();
         },
 
         exec: function (api, url, fn) {

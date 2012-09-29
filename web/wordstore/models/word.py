@@ -8,11 +8,12 @@ class Word(Document):
     structure = {
         'word': unicode,
         'user_id': ObjectId,
-        'acceptation': unicode,
-        'symbol': unicode,
+        'ps': unicode,
         'pron': unicode,
-        'sentence': unicode,
-        'translate': unicode,
+        'pos': unicode,
+        'acceptation': unicode,
+        'orig': unicode,
+        'trans': unicode,
         'note': unicode,
         'add_time': datetime,
     }

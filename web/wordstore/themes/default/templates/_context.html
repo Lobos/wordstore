@@ -4,35 +4,3 @@
         {{ caller() }}
     </div>
 {%- endmacro %}
-
-{%- macro sidebar() -%}
-    <div id="sidebar" class="sidebar">
-        <div id="sidebar_home">
-        {{ caller() }}
-        </div>
-        <div id="sidebar_top_handle" class="top-handle">
-            <i class="icon-arrowthick-n icon-black"></i> Back To Top
-        </div>
-    </div>
-    <script type="text/javascript">
-    (function () {
-        $g.sidebar = new Sidebar('sidebar', {
-            pageWidth: document.getElement('.body').getWidth().toInt()
-        });
-
-        var handle = $('sidebar_top_handle');
-        handle.addEvent('click', function () {
-            window.scrollTo('top');
-        });
-        window.addEvent('scroll', function () {
-            if (window.scrollY > 50) {
-                if (handle.isHidden())
-                    handle.fade('in');
-            } else {
-                if (handle.isVisible())
-                    handle.fade('out');
-            }
-        });
-    })();
-    </script>
-{%- endmacro -%}
