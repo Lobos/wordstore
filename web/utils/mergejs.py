@@ -14,6 +14,7 @@ JS_LIST = {
         LAB_COMMON + 'mootools-exts.js',
         LAB_COMMON + 'form-validator.js',
         LAB_COMMON + 'dictionary.js',
+        LAB_COMMON + 'wordstore.js',
         LAB_LOCAL + 'global.js',
     ]
 }

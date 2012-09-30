@@ -2,46 +2,51 @@
 {%- import theme('_context.html') as h -%}
 {% set active_nav = 'mine' %}
 {% block body %}
-    {% call h.title('我的词库') %}{% endcall %}
-    <div class="content" id="word_list">
+    <div class="title-bar">
+        <h3>My Word List <span class="count">× <i id="word_count">{{ models.count() }}</i></span></h3>
+    </div>
+    <div class="content word-list" id="word_list">
         {% for m in models %}
-        <dl class="word" id="{{ m._id }}">
+        <dl id="{{ m._id }}">
             <dt style="cursor:pointer;">
-                <span class="span5">{{ m.word }}</span>
-                <span class="span2 span">{{ m.add_time|format_datetime }}</span>
-                <a class="remove span" href="javascript:;">× 删除</a>
+                <span>{{ m.word }}</span>
+                <span class="right span">
+                    <span class="span2">{{ m.add_time|format_datetime }}</span>
+                    <a class="remove" href="javascript:;">× remove</a>
+                </span>
             </dt>
         </dl>
         {% endfor %}
     </div>
     <script type="text/javascript">
         (function () {
-            $$('#word_list > .word').addEvents({
-                'mouseover': function () {
-                    this.addClass('active');
-                },
-                'mouseout': function () {
-                    this.removeClass('active');
-                }
-            });
-
             $$('#word_list dt').addEvent('click', function (event) {
                 if (event.target.get('tag') == 'a')
                     return;
+                var dl = this.getParent();
 
-                var dd = this.getParent().getElement('dd');
+                var dd = dl.getElement('dd');
                 if (dd) {
                     dd.slide('toggle');
                 } else {
                     dd = new Element('dd', {'class': 'active'}).inject(this, 'after');
-                    var id = this.getParent().get('id');
+                    var id = dl.get('id');
                     new Request.HTML({
                         url: '{{ url_for(".single") }}' + id,
-                        update: dd
+                        onSuccess: function (t,e,h,j) {
+                            dd.set('html', h).slide('hide').slide('in');
+                        }
                     }).get();
+                }
+
+                if (dl.hasClass('active')) {
+                    dl.removeClass('active');
+                } else {
+                    dl.addClass('active');
                 }
             });
 
+            var word_count = $('word_count');
             $$('#word_list a.remove').addEvent('click', function () {
                 var dl = this.getParent('dl');
                 dl.loading();
@@ -51,8 +56,10 @@
                     data: { id: id },
                     onSuccess: function (json) {
                         dl.unloading();
-                        if (json.status == 1)
+                        if (json.status == 1) {
                             dl.nix(true);
+                            word_count.set('text', word_count.get('text').toInt() - 1);
+                        }
                     }
                 }).send();
             });

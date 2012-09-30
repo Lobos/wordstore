@@ -28,9 +28,7 @@
         },
 
         createSingle: function (word) {
-            var outer = new Element('dl', {
-                'class': 'word'
-            }).inject(this.container).store('word', word);
+            var outer = new Element('dl').inject(this.container).store('word', word);
 
             var dt = new Element('dt', {
                 'html': word + '<i class="load"></i>'
@@ -96,7 +94,7 @@
             var _createButtons = function (status, wrapper) {
                 if (status == 1) {
                     new Element('button', {
-                        'html': '加入仓库',
+                        'html': 'Submit',
                         'type': 'button',
                         'class': 'btn success',
                         'events': {
@@ -106,9 +104,9 @@
                         }
                     }).inject(wrapper);
                     new Element('button', {
-                        'html': '取消选择',
+                        'html': 'Reset',
                         'type': 'button',
-                        'class': 'btn warning',
+                        'class': 'btn',
                         'events': {
                             'click': function () {
                                 el.getElements('input[type="radio"]').removeProperty('checked');
@@ -118,7 +116,7 @@
                 }
 
                 new Element('button', {
-                    'html': '重 试',
+                    'html': 'Retry',
                     'type': 'button',
                     'class': 'btn warning',
                     'events': {
@@ -129,7 +127,7 @@
                 }).inject(wrapper);
 
                 new Element('button', {
-                    'html': '放 弃',
+                    'html': 'Drop',
                     'type': 'button',
                     'class': 'btn remove',
                     'events': {
@@ -169,10 +167,9 @@
                 var note = '<div class="control-group"><label class="control-label">笔记</label><div class="controls"><textarea rows="4" class="span6 note"></textarea></div></div>';
                 Elements.from(note)[0].inject(form);
 
-                var btn_container = new Element('div', {
-                    'class': 'control-group'
-                }).inject(form);
-                _createButtons(dict.status, btn_container);
+                note = '<div class="control-group"><label class="control-label"></label><div class="controls"></div></div>';
+                var btn_container = Elements.from(note)[0].inject(form);
+                _createButtons(dict.status, btn_container.getElement('.controls'));
             });
         },
 

@@ -1,5 +1,29 @@
 {% extends theme('base.html') %}
 {% block title %}单词仓库{% endblock %}
+{% set active_nav = 'home' %}
 {% block body %}
-    Hello world
+    <div class="content word-list" id="word_list">
+    </div>
+    <script type="text/javascript">
+        (function () {
+            var ws = new WordStore('word_list', {
+                onDestroy: function (id) {}
+            });
+
+            var load = function () {
+                new Request.JSON({
+                    url: '{{ url_for(".get_words") }}',
+                    onSuccess: function (json) {
+                        if (json.status == 1) {
+                            ws.loadWords(json.data);
+                        } else {
+                            $g.alert(json.msg);
+                        }
+                    }
+                }).get();
+            };
+
+            load();
+        })();
+    </script>
 {% endblock %}

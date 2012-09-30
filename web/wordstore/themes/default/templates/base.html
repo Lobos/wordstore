@@ -15,8 +15,8 @@
                 单词仓库
             </a>
             {%- set nav_bar = [
-                ('mine', url_for('word.mine'), '我的词库'),
-                ('add', url_for('word.add'), '增加'),
+                ('mine', url_for('word.mine'), 'Word List'),
+                ('add', url_for('word.add'), 'New Words'),
             ] -%}
             <ul class="menu unstyled">
                 {%- for id, href, caption in nav_bar -%}
@@ -28,11 +28,11 @@
             <ul id="top_user_info" class="user unstyled">
                 {% if user %}
                     <li><span>{{ user.nickname }}</span></li>
-                    <li><a href="">设置</a></li>
-                    <li><a href="{{ url_for('account.logout') }}">退出登陆</a></li>
+                    <li><a href="">Setting</a></li>
+                    <li><a href="{{ url_for('account.logout') }}">Logout</a></li>
                 {% else %}
-                    <li><a href="{{ url_for('account.login') }}?next={{ request.path }}">登录</a></li>
-                    <li><a href="{{ url_for('account.register') }}">注册</a></li>
+                    <li><a href="{{ url_for('account.login') }}?next={{ request.path }}">Login</a></li>
+                    <li><a href="{{ url_for('account.register') }}">Register</a></li>
                 {% endif %}
             </ul>
         </div>
