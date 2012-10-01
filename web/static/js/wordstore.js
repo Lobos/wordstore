@@ -19,29 +19,30 @@
 
         loadWords: function (data) {
             data = data || [];
-            data.each(function (d) {
+            data.each(function (d, index) {
                 var word = this.words[d.id] = new Word(this.container, {
                     data: d,
                     onNext: function (el) {
                         this.start(el.getNext());
                     }.bind(this),
-                    onDestroy: function () {
-                        this.fireEvent(d.id);
+                    onFinish: function (pass) {
+                        this.fireEvent('finish', [d.id, pass]);
                     }.bind(this)
                 });
+                if (index == 0)
+                    this.start(word.stage);
             }.bind(this));
-            this.start();
         },
 
         start: function (el) {
-            el = el || this.container.getFirst();
-            var id = el.retrieve('id');
-            this.words[id].show();
-        },
-
-        end: function () {
-            this.fireEvent('end');
+            if (el) {
+                var id = el.retrieve('id');
+                this.words[id].show();
+            } else {
+                this.fireEvent('over');
+            }
         }
+
     });
 
     var Word = new Class({
@@ -53,13 +54,12 @@
             this.setOptions(options);
             this.container = container;
             this.createStage1(options.data);
-            this.createStage2(options.data);
             this.score = 0;
         },
 
         createStage1: function (data) {
             var self = this;
-            var dl = this.stage = this.stage1 = new Element('dl').store('id', data.id).inject(this.container);
+            var dl = this.stage = new Element('dl').store('id', data.id).inject(this.container);
 
             var dt = new Element('dt', {
                 'html': data.word
@@ -112,7 +112,7 @@
                         'events': {
                             'click': function () {
                                 if (remember && d[0] == 'Right')
-                                    this.score++;
+                                    self.score++;
                                 _next();
                             }
                         }
@@ -122,23 +122,103 @@
             }.bind(this);
 
             var _next = function () {
+                buttons.getChildren().set('disabled', 'disabled');
+                this.createStage2(this.options.data);
                 this.fireEvent('next', dl);
                 dl.nix(true);
-                this.stage = this.stage2.inject(this.container);
             }.bind(this);
         },
 
         createStage2: function (data) {
-            var dl = this.stage2 = new Element('dl').store('id', data.id);
-            dl.set('html', 'stage2');
+            var dl = this.stage = new Element('dl').store('id', data.id).inject(this.container);
+            var dt = new Element('dt').inject(dl);
+
+            var input_append = new Element('div', {'class': 'input-append'}).inject(dt);
+            var text = new Element('input', {
+                'type': 'text',
+                'disabled': 'disabled',
+                'events': {
+                    'keyup': function (event) {
+                        if (event.key == 'enter')
+                            _checkText();
+                    }
+                }
+            }).inject(input_append);
+            new Element('button', {
+                'html': 'ok',
+                'type': 'button',
+                'disabled': 'disabled',
+                'class':'btn',
+                'events': {
+                    'click': function () {
+                        _checkText();
+                    }
+                }
+            }).inject(input_append);
+            var wrong = new Element('span', {
+                'class': 'label label-warning',
+                'html': 'Wrong, try again.'
+            }).fade('hide').inject(input_append, 'after');
+
+            new Element('label', {'html': data.acceptation}).inject(dt);
+
+            var dd = new Element('dd').inject(dl).slide('hide');
+            new Element('h3', {'html': data.word }).inject(dd);
+            new Element('p', {'html': '<span class="ps">[' + data.ps + ']</span><i class="icon-audio"></i>'}).inject(dd);
+            new Element('p', {'html': data.pos + ' ' + data.acceptation }).inject(dd);
+            if (data.orig)
+                new Element('p', {'html': data.orig + '<br />' + data.trans }).inject(dd);
+            if (data.note)
+                new Element('p', {'html': data.note }).inject(dd);
+
+            new Element('button', {
+                'html': 'Next Word',
+                'type': 'button',
+                'class': 'btn right warning',
+                'events': {
+                    'click': function () {
+                        this.set('disabled', 'disabled');
+                        _next();
+                    }
+                }
+            }).inject(dd);
+
+            dd.getElement('.icon-audio').addEvent('click', function () {
+                this.audio.play();
+            }.bind(this));
+
+            var _counts = 0;
+            var _checkText = function () {
+                if (text.get('value').trim() == data.word) {
+                    this.score++;
+                    _next();
+                    return;
+                }
+
+                if (_counts == 0) {
+                    wrong.fade('in');
+                } else {
+                    wrong.fade('out');
+                    input_append.getChildren().set('disabled', 'disabled');
+                    dd.slide('in');
+                }
+                _counts++;
+            }.bind(this);
+
+            var _next = function () {
+                this.fireEvent('finish', this.score >= 2);
+                this.fireEvent('next', dl);
+                dl.nix(true);
+            }.bind(this);
         },
 
         show: function () {
             this.stage.addClass('active');
-        },
-
-        destroy: function () {
-            this.fireEvent('destroy');
+            this.stage.getElements(':disabled').removeProperty('disabled');
+            this.audio.play();
+            var text = this.stage.getElement('input[type="text"]');
+            if (text) text.focus();
         }
+
     });
 })();

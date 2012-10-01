@@ -82,3 +82,24 @@ def single(id=None):
         abort(404)
 
     return render('word/_dd.html', model=model)
+
+@bp.route('/word/finish/', methods=['POST'])
+@user.require_login()
+def finish():
+    try:
+        id = ObjectId(request.form.get('id'))
+        pss = request.form.get('pass') == 'true'
+        u = user.get_user()
+        model = db.Word.find_one({ '_id':id, 'user_id': u.id })
+        if not model:
+            return render_json('')
+
+        if pss:
+            model.delete()
+        else:
+            model['add_time'] = cn_time_now()
+            model.save()
+        return render_success()
+    except Exception, e:
+        abort(404)
+

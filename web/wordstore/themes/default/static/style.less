@@ -246,7 +246,7 @@
           margin-left: 0;
         }
 
-        .span {
+        label, .span {
           font-size: 12px;
           text-shadow: none;
         }
@@ -256,10 +256,15 @@
           top: 1px;
           visibility: hidden;
         }
+
+        .input-append {
+          display: inline-block;
+        }
       }
 
       dd {
         margin: 0 0 0 14px;
+        padding: 10px 0;
         position: relative;
         &:not(.active) { display: none; }
 
@@ -274,10 +279,6 @@
 
         .ps {
           font-family: "lucida sans unicode",arial;
-        }
-
-        p:first-child {
-          margin-top: 15px;
         }
       }
 

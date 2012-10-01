@@ -1099,13 +1099,13 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .body .word-list dl{padding:8px 0;margin:0;color:#666;font-size:12px;border-top:1px dashed #ddd;position:relative;opacity:0.7;filter:alpha(opacity=70);}.body .word-list dl:last-child{border-bottom:1px dashed #ddd;}
 .body .word-list dl dt{font-weight:normal;color:#333;font-size:18px;padding:0 10px;position:relative;line-height:22px;border-left:4px solid #999;text-shadow:1px 1px 2px rgba(0, 0, 0, 0.2);}.body .word-list dl dt .load{width:16px;height:11px;display:inline-block;margin-left:12px;}.body .word-list dl dt .load.show{background:url(images/ajax-loader.gif);}
 .body .word-list dl dt [class*="span"]{display:inline-block;float:none;margin-left:0;}
-.body .word-list dl dt .span{font-size:12px;text-shadow:none;}
+.body .word-list dl dt label,.body .word-list dl dt .span{font-size:12px;text-shadow:none;}
 .body .word-list dl dt .right{position:absolute;right:0;top:1px;visibility:hidden;}
-.body .word-list dl dd{margin:0 0 0 14px;position:relative;}.body .word-list dl dd:not(.active){display:none;}
+.body .word-list dl dt .input-append{display:inline-block;}
+.body .word-list dl dd{margin:0 0 0 14px;padding:10px 0;position:relative;}.body .word-list dl dd:not(.active){display:none;}
 .body .word-list dl dd .control-label{width:30px;text-align:left;}
 .body .word-list dl dd .controls{margin-left:50px;}
 .body .word-list dl dd .ps{font-family:"lucida sans unicode",arial;}
-.body .word-list dl dd p:first-child{margin-top:15px;}
 .body .word-list dl .btn{margin-right:10px;}.body .word-list dl .btn.remove{color:#ffffff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);background-color:#363636;background-image:-moz-linear-gradient(top, #444444, #222222);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#444444), to(#222222));background-image:-webkit-linear-gradient(top, #444444, #222222);background-image:-o-linear-gradient(top, #444444, #222222);background-image:linear-gradient(to bottom, #444444, #222222);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff444444', endColorstr='#ff222222', GradientType=0);border-color:#222222 #222222 #000000;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);*background-color:#222222;filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);}.body .word-list dl .btn.remove:hover,.body .word-list dl .btn.remove:active,.body .word-list dl .btn.remove.active,.body .word-list dl .btn.remove.disabled,.body .word-list dl .btn.remove[disabled]{color:#ffffff;background-color:#222222;*background-color:#151515;}
 .body .word-list dl .btn.remove:active,.body .word-list dl .btn.remove.active{background-color:#080808 \9;}
 .body .word-list dl .btn.remove .caret{border-top-color:#ffffff;border-bottom-color:#ffffff;}

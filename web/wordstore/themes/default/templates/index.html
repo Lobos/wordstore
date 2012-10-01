@@ -2,20 +2,42 @@
 {% block title %}单词仓库{% endblock %}
 {% set active_nav = 'home' %}
 {% block body %}
-    <div class="content word-list" id="word_list">
-    </div>
+    <div class="content word-list" id="word_list"></div>
+    <div class="content alert alert-block" id="no_words"></div>
     <script type="text/javascript">
         (function () {
             var ws = new WordStore('word_list', {
-                onDestroy: function (id) {}
+                onFinish: function (id, pass) {
+                    new Request.JSON({
+                        url: '{{ url_for("word.finish") }}',
+                        data: {
+                            'id': id,
+                            'pass': pass
+                        },
+                        onSuccess: function (json) {}
+                    }).send();
+                },
+                onOver: function () {
+                    load();
+                }
             });
 
+            var loading = function () {
+                $('no_words').set('html', '读取中，请稍后...').fade('in');
+            };
+
             var load = function () {
+                loading();
                 new Request.JSON({
                     url: '{{ url_for(".get_words") }}',
                     onSuccess: function (json) {
                         if (json.status == 1) {
-                            ws.loadWords(json.data);
+                            if (json.total == 0) {
+                                $('no_words').set('html', '仓库中没有到期单词.').show();
+                            } else {
+                                ws.loadWords(json.data);
+                                $('no_words').fade('hide');
+                            }
                         } else {
                             $g.alert(json.msg);
                         }

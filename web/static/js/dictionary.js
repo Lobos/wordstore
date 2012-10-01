@@ -92,6 +92,9 @@
             };
 
             var _createButtons = function (status, wrapper) {
+                var dis = function () {
+                    wrapper.getElements('button').set('disabled', 'disabled');
+                };
                 if (status == 1) {
                     new Element('button', {
                         'html': 'Submit',
@@ -99,6 +102,7 @@
                         'class': 'btn success',
                         'events': {
                             'click': function () {
+                                dis();
                                 self.saveWord(el);
                             }
                         }
@@ -121,6 +125,7 @@
                     'class': 'btn warning',
                     'events': {
                         'click': function () {
+                            dis();
                             self.prepare(el);
                         }
                     }
@@ -132,6 +137,7 @@
                     'class': 'btn remove',
                     'events': {
                         'click': function () {
+                            dis();
                             self.show(el.getNext());
                             el.nix(true);
                         }
