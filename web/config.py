@@ -12,7 +12,7 @@ MONGODB_HOST = "localhost"
 MONGODB_PORT = 27017
 MONGODB_DATABASE = "wordstore"
 
-ADMIN = ['admin@example.com', 'lobos841@gmail.com']
+ADMIN = [u'admin@example.com']
 MAX_WORDS = 300
 BURY_HOURS = 8
 PAGE_SIZE = 10

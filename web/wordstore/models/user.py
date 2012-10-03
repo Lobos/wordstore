@@ -7,7 +7,7 @@ from . import max_length
 from word import Word
 
 class User(Document):
-    __collection__ = 'admin'
+    __collection__ = 'user'
     structure = {
         'nickname': unicode,
         'email': unicode,

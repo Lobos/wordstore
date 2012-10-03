@@ -95,10 +95,14 @@ def require_admin():
         return func
     return decorator
 
-def check_invitation(code):
+def check_invitation(code, remove=False):
     lst = cache.get_invitation_codes()
     suc = code in lst
-    if suc:
-        db.invitation.remove({'code': code})
-        cache.clear_invitation()
+    if suc and remove:
+        remove_invitation(code)
     return suc
+
+def remove_invitation(code):
+    db.invitation.remove({'code': code})
+    cache.clear_invitation()
+

@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 import datetime
-from flask import Blueprint, redirect, url_for, jsonify, request, make_response
+from flask import Blueprint, redirect, url_for, jsonify, request, make_response, flash
 from utils import cn_time_now
 from .. import db, app
 from .. helpers import user
@@ -51,9 +51,6 @@ def register():
         return render('account/register.html')
 
     f = request.form
-    if not user.check_invitation(f.get('invitation')):
-        return render_json(u'邀请码不正确或者已被使用')
-
     model = db.User()
     model['email'] = f.get('email')
     exist = db.User.find({ 'email': model['email'] }).count() > 0
@@ -63,9 +60,14 @@ def register():
     model['create_time'] = cn_time_now()
     model['nickname'] = f.get('nickname')
     model['password'] = db.User.encode_pwd(f.get('password'))
+
+    if not user.check_invitation(f.get('invitation')):
+        return render_json(u'邀请码不正确或者已被使用')
+
     try:
         model.save()
         user.login(model['email'], model['password'])
+        user.remove_invitation(f.get('invitation'))
         return render_success()
     except Exception, e:
         app.logger.error(e)
@@ -88,8 +90,22 @@ def check_invitation():
     else:
         return render_success()
 
-@bp.route('/account/profile')
+@bp.route('/account/profile', methods=['GET', 'POST'])
 @user.require_login()
 def profile():
-    model = user.get_user_model()
-    return render('account/profile.html', model=model)
+    if request.method == 'GET':
+        model = user.get_user_model()
+        return render('account/profile.html', model=model)
+
+    else:
+        model = user.get_user_model()
+        f = request.form
+        model['nickname'] = f.get('nickname', model['nickname'])
+        if f.get('old_password') and f.get('password'):
+            if db.User.encode_pwd(f.get('old_password')) == model['password']:
+                model['password'] = db.User.encode_pwd(f.get('password'))
+            else:
+                return render_json(u'旧密码不正确')
+        model.save()
+        flash(u'修改成功', 'success')
+        return render_success()

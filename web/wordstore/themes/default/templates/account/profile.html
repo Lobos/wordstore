@@ -4,6 +4,87 @@
 {% block body %}
     {% call h.title('My Profile') %}{% endcall %}
     <div class="content">
-        ...
+        {% call f.form('form_profile') %}
+            {% call f.control('Nickname:') %}
+                <div class="info">
+                    {{ model.email }}
+                </div>
+            {% endcall %}
+
+            {% call f.control('Nickname:') %}
+                <div id="nickname" class="info">
+                    {{ model.nickname }}
+                    &nbsp; <a href="javascript:;">Edit</a>
+                </div>
+            {% endcall %}
+
+            {% call f.control('Password:') %}
+                <div id="password" class="info">
+                    <a href="javascript:;">Edit</a>
+                </div>
+            {% endcall %}
+
+            {% call f.control(id='button_group') %}
+                <button type="button" id="btn_save" class="btn btn-primary">Submit</button>
+                <button type="button" id="btn_cancel" class="btn">Cancel</button>
+            {% endcall %}
+        {% endcall %}
     </div>
+    <div class="hide" id="hide_place">
+        <div id="edit_nickname">
+            {{ f.input(name="nickname", value=model.nickname, validate="{required:true, maxlen: 18}") }}
+        </div>
+        <div id="edit_password">
+            {{ f.input(name="old_password", placeholder="Old Password", type="password", validate="{required:true}") }}
+            <br />
+            <br />
+            {{ f.input(name="password", placeholder="New Password", id="input_password", type="password", validate="{required:true, type: 'password', minlen: 6, maxlen:18}") }}
+            <br />
+            <br />
+            {{ f.input(type="password", placeholder="Repeat Password", validate="{required:true, equal:'input_password', title:'密码'}") }}
+        </div>
+    </div>
+    <script type="text/javascript">
+    (function () {
+        $('button_group').fade('hide');
+        $$('.info a').addEvent('click', function () {
+            var info = this.getParent();
+            $('edit_' + info.get('id')).inject(info, 'after');
+            info.dissolve();
+            $('button_group').fade('in');
+        });
+
+        var hide = $('hide_place');
+        $('btn_cancel').addEvent('click', function () {
+            ['nickname', 'password'].each(function (id) {
+                $('edit_' + id).inject(hide);
+                $(id).reveal();
+            });
+            $('button_group').fade('out');
+        });
+
+        $('btn_save').addEvent('click', function () {
+            var formValidator = new Form.Validator('form_profile', {
+                evaluateOnBlur: false,
+                onSuccess: function (el) {
+                    var parent = el.getParent('.control-group');
+                    parent.removeClass('error');
+                },
+                onFailure: function (el, msg) {
+                    var parent = el.getParent('.control-group');
+                    parent.addClass('error');
+                }
+            });
+            $g.saveForm({
+                button: this,
+                form: 'form_profile',
+                validator: formValidator,
+                url: '{{ url_for(".profile") }}',
+                success: function (json) {
+                    location.reload();
+                }
+            })
+        });
+    })();
+    </script>
 {% endblock %}

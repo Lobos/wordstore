@@ -29,8 +29,8 @@
     {% if value %}{{ name }}="{{ value }}"{% endif %}
 {%- endmacro %}
 
-{%- macro input(name='', type='text', id=none, value='', readonly=false, class='input-large', validate=none) -%}
-    <input name="{{ name }}" type="{{ type }}" id="{{ id or get_uid() }}" {% if readonly %}readonly="readonly"{% endif %} value="{{ value or '' }}" {{ _key_value('validate', validate) }} class="{{ class }}" />
+{%- macro input(name='', type='text', id=none, value='', readonly=false, class='input-large', placeholder='', validate=none) -%}
+    <input name="{{ name }}" type="{{ type }}" id="{{ id or get_uid() }}" placeholder="{{ placeholder }}" {% if readonly %}readonly="readonly"{% endif %} value="{{ value or '' }}" {{ _key_value('validate', validate) }} class="{{ class }}" />
 {%- endmacro -%}
 
 {%- macro textarea(name='', id=none, rows=4, class='span6', validate=none, value='', readonly=false) -%}
