@@ -88,3 +88,8 @@ def check_invitation():
     else:
         return render_success()
 
+@bp.route('/account/profile')
+@user.require_login()
+def profile():
+    model = user.get_user_model()
+    return render('account/profile.html', model=model)

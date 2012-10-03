@@ -1,4 +1,4 @@
-@page-width: 600px;
+@page-width: 460px;
 .page-width {
   width: @page-width;
   margin: 0 auto;
@@ -94,6 +94,74 @@
           font-size: 15px;
         }
       }
+
+      img.avatar-small {
+        width: 28px;
+        height: 28px;
+        border: solid 1px #777;
+      }
+
+      .pop-panel {
+        width: 180px;
+        height: 96px;
+        z-index: 999;
+        padding: 20px 20px 20px 136px;
+        display: none;
+        cursor: auto;
+        background: #fff;
+        border: solid 1px #bebebe;
+        position: absolute;
+        right: 0;
+        top: 52px;
+        line-height: 18px;
+        .box-shadow(0px 2px 4px rgba(0,0,0,.25));
+        .border-radius(4px);
+
+        label {
+          font-weight: bold;
+          font-size: 18px;
+          height: 22px;
+          margin: 0 0 10px;
+        }
+        .btns {
+          position: absolute;
+          bottom: 20px;
+          left: 136px;
+        }
+
+        .avatar {
+          img {
+            width: 96px;
+            height: 96px;
+          }
+          position: absolute;
+          left: 20px;
+          top: 20px;
+        }
+
+        &:before {
+          content: '';
+          display: inline-block;
+          border-left:   14px solid transparent;
+          border-right:  14px solid transparent;
+          border-bottom: 14px solid #fff;
+          border-bottom-color: #bebebe;
+          position: absolute;
+          top: -14px;
+          right: 20px;
+        }
+        &:after {
+          content: '';
+          display: inline-block;
+          border-left:   13px solid transparent;
+          border-right:  13px solid transparent;
+          border-bottom: 13px solid #fff;
+          position: absolute;
+          top: -13px;
+          right: 21px;
+        }
+      }
+
     }
   }
 }

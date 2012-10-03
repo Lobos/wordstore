@@ -1,27 +1,27 @@
 {%- extends theme('base.html') -%}
 {%- import theme('_context.html') as h -%}
 {%- import theme('_forms.html') as f -%}
-{% block title %}登录{% endblock %}
+{% block title %}Login{% endblock %}
 {% block body %}
-    {% call h.title('用户登录') %}{% endcall %}
+    {% call h.title('User Login') %}{% endcall %}
     <div class="content">
         {% call f.form('login_form') %}
-            {% call f.control('邮箱', '') %}
+            {% call f.control('Email', '') %}
                 {{ f.input(name="email", id="email", validate="{required:true, type:'email'}") }}
             {% endcall %}
 
-            {% call f.control('密码', '') %}
+            {% call f.control('Password', '') %}
                 {{ f.input(name="password", type="password", validate="{required:true}") }}
             {% endcall %}
 
             {% call f.control('') %}
-                {{ f.checkbox('remember', text='下次自动登录') }}
+                {{ f.checkbox('remember', text='Remember me!') }}
             {% endcall %}
 
             {% call f.control('') %}
-                <button type="submit" id="btn_login" class="btn btn-primary">登 录</button>
-                <a style="margin-left: 5px;" href="">忘了密码?</a>
-                <a style="margin-left: 5px; display: none;" href="{{ url_for('account.register') }}">注册账号</a>
+                <button type="submit" id="btn_login" class="btn btn-primary">Login</button>
+                <a style="margin-left: 5px;" href="">Forgot password?</a>
+                <a style="margin-left: 5px; display: none;" href="{{ url_for('account.register') }}">Register</a>
             {% endcall %}
         {% endcall %}
     </div>

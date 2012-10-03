@@ -28,13 +28,49 @@
             <ul id="top_user_info" class="user unstyled">
                 {% if user %}
                     <li><span>{{ user.nickname }}</span></li>
-                    <li><a href="">Setting</a></li>
-                    <li><a href="{{ url_for('account.logout') }}">Logout</a></li>
+                    <li class="info-handle" style="position: relative;">
+                        {% set avatar = get_avatar(user.id, user.email, 96) %}
+                        <img class="avatar-small" src="{{ avatar }}" />
+                        <i class="icon-carat-1-s icon-white"></i>
+                        <div class="pop-panel">
+                            <a href="javascript:;" class="avatar"><img src="{{ avatar }}" alt="{{ user.nickname }}"></a>
+                            <label>{{ user.nickname }}</label>
+                            {{ user.email }}
+                            <div class="btns">
+                                <a href="{{ url_for('account.profile') }}" class="btn btn-primary">My Profile</a>
+                                <a href="{{ url_for('account.logout') }}" class="btn">Log out</a>
+                            </div>
+                        </div>
+                    </li>
                 {% else %}
                     <li><a href="{{ url_for('account.login') }}?next={{ request.path }}">Login</a></li>
                     <li><a href="{{ url_for('account.register') }}">Register</a></li>
                 {% endif %}
             </ul>
+            <script type="text/javascript">
+                (function () {
+                    var ul = $('top_user_info');
+                    var el = ul.getElement('.pop-panel');
+                    var show = function () {
+                        el.setStyle('display', 'block');
+                        document.body.addEvent('click', _hide);
+                    };
+                    var hide = function () {
+                        el.setStyle('display', 'none');
+                        document.body.removeEvent('click', _hide);
+                    };
+                    var _hide = function (event) {
+                        if (ul.contains(event.target))
+                            return;
+                        hide();
+                    };
+                    ul.getElements('.info-handle').addEvent('click', function (event) {
+                        if (el.contains(event.target)) return;
+                        if (el.isVisible()) hide();
+                        else show();
+                    });
+                })();
+            </script>
         </div>
 
         <div class="clear"></div>

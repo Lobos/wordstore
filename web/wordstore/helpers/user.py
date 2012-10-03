@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import base64
 from functools import wraps
-from flask import session, request, redirect, url_for, jsonify
+from flask import session, request, redirect, url_for, jsonify, abort
 from ..models import UserInfo
 from utils import pydes, json
 from .. import db, config
@@ -82,8 +82,20 @@ def require_login(json=False):
         return func
     return decorator
 
+def require_admin():
+    def decorator(f):
+        @wraps(f)
+        def func(*args, **kwargs):
+            user = get_user()
+
+            if user is None or user.email not in config.ADMIN:
+                abort(404)
+
+            return f(*args, **kwargs)
+        return func
+    return decorator
+
 def check_invitation(code):
-    return True
     lst = cache.get_invitation_codes()
     suc = code in lst
     if suc:
