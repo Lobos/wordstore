@@ -241,7 +241,7 @@
 
             new Request({
                 url: url,
-                timeout: this.opitons.timeout,
+                timeout: this.options.timeout,
                 onSuccess: function (text, xml) {
                     if (text == 'error') {
                         fn({ status: 0 });
