@@ -9,6 +9,7 @@
 
         options: {
             saveUrl: null,
+            timeOut: 180 * 1000,
             api: {
                 'iciba': 'http://dict-co.iciba.com/api/dictionary.php?w='
             }
@@ -240,6 +241,7 @@
 
             new Request({
                 url: url,
+                timeout: this.opitons.timeout,
                 onSuccess: function (text, xml) {
                     if (text == 'error') {
                         fn({ status: 0 });
