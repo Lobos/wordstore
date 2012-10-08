@@ -11,7 +11,7 @@
             saveUrl: null,
             timeOut: 180 * 1000,
             api: {
-                'iciba': 'http://dict-co.iciba.com/api/dictionary.php?w='
+                'iciba': 'http://dict-co.iciba.com/api/dictionary.php?w={word}'
             }
         },
 
@@ -68,7 +68,7 @@
             var word = el.retrieve('word');
             var times = el.retrieve('times') || 0;
             var api = this.getApi(times);
-            this.createForm(el, api[0], api[1] + word);
+            this.createForm(el, api[0], api[1].substitute({'word': word}));
             el.store('times', times+1);
             return this;
         },

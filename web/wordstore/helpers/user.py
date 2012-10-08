@@ -16,7 +16,12 @@ def login(email, password):
         return None
     model = db.User.login(email, password)
     if model:
-        user_data = UserInfo(model['_id'], model['nickname'], model['email'], model.word_count())
+        #user_data = UserInfo(model['_id'], model['nickname'], model['email'], model.word_count())
+        user_data = UserInfo(id=model['_id'],
+            nickname=model['nickname'],
+            email=model['email'],
+            webster_key=model['webster_key']
+        )
         session[SESSION_USER] = user_data
         return user_data
     else:

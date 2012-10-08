@@ -2,9 +2,18 @@
 from datetime import datetime
 from flask import request
 from flaskext.mongokit import Document
+from mongokit import DocumentMigration
 from utils import md5, cn_time_now
 from . import max_length
-from word import Word
+
+class UserMigration(DocumentMigration):
+    def migration01__add_webster_key(self):
+        self.target = {'webster_key':{'$exists':False}}
+        self.update = {'$set':{'webster_key':u''}}
+
+    def migration02__remove_words(self):
+        self.target = {'words':{'$exists':True}}
+        self.update = {'$unset':{'words':[]}}
 
 class User(Document):
     __collection__ = 'user'
@@ -15,20 +24,18 @@ class User(Document):
         'login_ip': unicode,
         'login_time': datetime,
         'create_time': datetime,
-        'words': [Word]
+        'webster_key': unicode
     }
 
     use_autorefs = True
     required_fields = ['password', 'email']
-    default_values = {
-        'words': []
-    }
     validators = {
         'nickname': max_length(18)
     }
     indexes = [{
         'fields': 'email', 'unique': True
     }]
+    migration_handler = UserMigration
 
     @staticmethod
     def encode_pwd(pwd):
@@ -45,13 +52,10 @@ class User(Document):
             model.save()
         return model
 
-    def word_count(self):
-        return len(self['words'])
-
-
 class UserInfo(object):
-    def __init__(self, id, nickname, email, count):
-        self.id = id
-        self.nickname = nickname
-        self.email = email
-        self.count = count
+    def __init__(self, **args):
+        self.id = args.get('id')
+        self.nickname = args.get('nickname', '')
+        self.email = args.get('email')
+        self.webster_key = args.get('webster_key', '')
+        self.count = args.get('count', 0)

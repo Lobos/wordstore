@@ -101,11 +101,13 @@ def profile():
         model = user.get_user_model()
         f = request.form
         model['nickname'] = f.get('nickname', model['nickname'])
+        model['webster_key'] = f.get('webster_key', model['webster_key'])
         if f.get('old_password') and f.get('password'):
             if db.User.encode_pwd(f.get('old_password')) == model['password']:
                 model['password'] = db.User.encode_pwd(f.get('password'))
             else:
                 return render_json(u'旧密码不正确')
         model.save()
+        user.clear_session()
         flash(u'修改成功', 'success')
         return render_success()

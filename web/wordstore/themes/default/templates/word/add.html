@@ -19,7 +19,7 @@
             var dict = new Dictionary('word_list', {
                 saveUrl: '{{ url_for(".add") }}',
                 api: {
-                    'iciba': '{{ url_for(".iciba") }}'
+                    'iciba': '{{ url_for("api.iciba", word="") }}{word}'
                 },
                 onComplete: function () {
                     $('add_form').slide('in');

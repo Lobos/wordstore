@@ -6,11 +6,12 @@ def register_db(db):
     db.register([User, Invitation, Word])
 
 def register_views(app):
-    from views import home, account, word, manage
+    from views import home, account, word, manage, api
     app.register_blueprint(home.bp)
     app.register_blueprint(account.bp)
     app.register_blueprint(word.bp)
     app.register_blueprint(manage.bp)
+    app.register_blueprint(api.bp)
 
 def register_filters(app):
     from utils import filters, string, format_datetime
