@@ -18,10 +18,12 @@
         (function () {
             var dict = new Dictionary('word_list', {
                 saveUrl: '{{ url_for(".add") }}',
-                api: {
-                    'iciba': '{{ url_for("api.iciba", word="") }}{word}'
-                },
+                alert: $g.alert,
+                api: [
+                    { id: 'webster', url: '{{ url_for("api.webster", word="") }}{word}' }
+                ],
                 onComplete: function () {
+                    $('ta_words').set('value', '');
                     $('add_form').slide('in');
                 }
             });
@@ -35,9 +37,8 @@
                     return;
                 }
 
-                $('ta_words').set('value', '');
                 $('add_form').slide('out');
-                dict.addWords(words).showFirst();
+                dict.addWords(words).show();
             });
         })();
     </script>

@@ -5,15 +5,13 @@
         },
 
         initAlert: function (element) {
-            var self = this;
             this.topMessager = document.id(element).set('tween', {
                 property: 'top',
-                //duration: 10000,
                 link: 'cancel'
             }).addEvent('click', function () {
-                    if (this.getStyle('top').toInt() >= -1)
-                        this.tween(-1, -this.outerHeight());
-                });
+                if (this.getStyle('top').toInt() >= -1)
+                    this.tween(-1, -this.outerHeight());
+            });
             if (this.topMessager.getElement('.alert').get('text'))
                 this.alert(null, null, true);
         },
@@ -27,7 +25,6 @@
                 onSuccess: function (el) {
                     var parent = el.getParent('.control-group');
                     parent.removeClass('error');
-                    //var help = parent.getElement('.help-inline');
                     var help = parent.getElement('[class^=help-]');
                     if (help)
                         help.set('html', options.successHtml);
@@ -35,7 +32,6 @@
                 onFailure: function (el, msg) {
                     var parent = el.getParent('.control-group');
                     parent.addClass('error');
-                    //var help = parent.getElement('.help-inline');
                     var help = parent.getElement('[class^=help-]');
                     if (help)
                         help.set('html', msg);

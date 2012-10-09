@@ -12,8 +12,7 @@ class Word(Document):
         'pron': unicode,
         'pos': unicode,
         'acceptation': unicode,
-        'orig': unicode,
-        'trans': unicode,
+        'sent': unicode,
         'note': unicode,
         'add_time': datetime,
     }

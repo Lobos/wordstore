@@ -10,25 +10,62 @@
         options: {
             saveUrl: null,
             timeOut: 180 * 1000,
-            api: {
-                'iciba': 'http://dict-co.iciba.com/api/dictionary.php?w={word}'
-            }
+            alert: alert,
+            api: []
         },
 
         initialize: function (container, options) {
             this.setOptions(options);
             this.container = document.id(container);
+            this.words = [];
+            this.current = null;
+            this.next = null;
         },
 
         addWords: function (words) {
+            var self = this;
             words = typeOf(words) == 'string' ? [words] : words;
             words.each(function (w) {
-                this.createSingle(w.trim());
+                var options = Object.merge(Object.clone(self.options), {
+                    onComplete: function () {
+                        self.show();
+                    }
+                });
+                var word = new _Word(w.trim(), options);
+                word.element.inject(this.container);
+                this.words.push(word);
             }.bind(this));
             return this;
         },
 
-        createSingle: function (word) {
+        show: function () {
+            this.current = this.words.shift();
+            if (this.current) {
+                this.current.load().show();
+                this.loadNext();
+            } else {
+                this.fireEvent('complete');
+            }
+
+            /*if (!el) {
+                this.fireEvent('complete');
+                return this;
+            }
+            el.addClass('active');
+            var next = el.getNext();
+            if (next)
+                this.prepare(next);
+            return this;
+            */
+        },
+
+        loadNext: function () {
+            var word = this.words[0];
+            if (word) word.load();
+        }
+
+        //=====================
+        /*createSingle: function (word) {
             var outer = new Element('dl').inject(this.container).store('word', word);
 
             var dt = new Element('dt', {
@@ -37,7 +74,6 @@
 
             new Element('dd').inject(outer);
         },
-
         getApi: function (times) {
             times = times || 0;
             var apis = this.options.api;
@@ -45,22 +81,9 @@
             var key = Object.keys(apis)[index];
             return [key, apis[key]];
         },
-
         showFirst: function () {
             var first = this.container.getFirst();
             this.prepare(first).show(first);
-            return this;
-        },
-
-        show: function (el) {
-            if (!el) {
-                this.fireEvent('complete');
-                return this;
-            }
-            el.addClass('active');
-            var next = el.getNext();
-            if (next)
-                this.prepare(next);
             return this;
         },
 
@@ -254,6 +277,163 @@
                     fn({ status: 0 });
                 }
             }).get();
+        }*/
+    });
+
+    var _Word = new Class({
+        Implements: [Events, Options],
+
+        options: {
+            alert: alert,
+            saveUrl: null,
+            api: []
+        },
+
+        initialize: function (word, options) {
+            this.word = word;
+            this.setOptions(options);
+            this.createElement();
+            this.times = 0;
+        },
+
+        createElement: function () {
+            var dl = this.element = new Element('dl');
+
+            this.head = new Element('dt', {
+                'html': this.word + '<i class="load"></i>'
+            }).inject(dl);
+
+            this.body = new Element('dd').inject(dl);
+        },
+
+        show: function () {
+            this.element.addClass('active');
+            //this.createButtons(1, this.body);
+            return this;
+        },
+
+        load: function () {
+            this.head.getElement('.load').addClass('show');
+            this.body.empty();
+            this.getApi().load();
+            return this;
+        },
+
+        getApi: function () {
+            var self = this;
+            var a = this.options.api[this.times % this.options.api.length],
+                api, url;
+            switch (a.id) {
+                case 'webster':
+                    url = a.url.substitute({word: this.word});
+                    api = new _Api.Webster(url, {
+                        onComplete: function (json) {
+                            self.body.set('html', json);
+                        }
+                    });
+                    break;
+            }
+            return api;
+        },
+
+        drop: function () {
+            this.element.nix(true);
+            this.fireEvent('complete');
+        },
+
+        parse: function () {},
+
+        save: function () {},
+
+        createButtons: function (status, wrapper) {
+            var self = this;
+            var dis = function () {
+                wrapper.getElements('button').set('disabled', 'disabled');
+            };
+            if (status == 1) {
+                new Element('button', {
+                    'html': 'Submit',
+                    'type': 'button',
+                    'class': 'btn success',
+                    'events': {
+                        'click': function () {
+                            dis();
+                            self.save();
+                        }
+                    }
+                }).inject(wrapper);
+                new Element('button', {
+                    'html': 'Reset',
+                    'type': 'button',
+                    'class': 'btn',
+                    'events': {
+                        'click': function () {
+                            self.body.getElements('input[type="radio"]').removeProperty('checked');
+                        }
+                    }
+                }).inject(wrapper);
+            }
+
+            new Element('button', {
+                'html': 'Retry',
+                'type': 'button',
+                'class': 'btn warning',
+                'events': {
+                    'click': function () {
+                        dis();
+                        self.load();
+                    }
+                }
+            }).inject(wrapper);
+
+            new Element('button', {
+                'html': 'Drop',
+                'type': 'button',
+                'class': 'btn remove',
+                'events': {
+                    'click': function () {
+                        dis();
+                        self.drop();
+                    }
+                }
+            }).inject(wrapper);
+        }
+    });
+
+    var _Api = new Class({
+        Implements: [Events, Options],
+
+        options: {},
+
+        initialize: function (url, options) {
+            this.url = url;
+            this.setOptions(options);
+        },
+
+        getRequest: function () {
+            return new Request({
+                url: this.url,
+                method: 'get',
+                onSuccess: function (text, xml) {
+                    this.parse(xml);
+                }.bind(this)
+            });
+        },
+
+        parse: function () {
+            //pass
+        },
+
+        load: function () {
+            this.getRequest().send();
+        }
+    });
+
+    _Api.Webster = new Class({
+        Implements: [_Api],
+
+        parse: function (xml) {
+            this.fireEvent('complete', xml);
         }
     });
 })();
