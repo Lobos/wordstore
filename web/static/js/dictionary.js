@@ -328,7 +328,7 @@
                     url = a.url.substitute({word: this.word});
                     api = new _Api.Webster(url, {
                         onComplete: function (json) {
-                            self.body.set('html', json);
+                            self.body.set('html', JSON.encode(json));
                         }
                     });
                     break;
@@ -436,7 +436,13 @@
         Implements: [_Api],
 
         parse: function (xml) {
-            this.fireEvent('complete', xml);
+            var doc = xml.documentElement;
+            var dict = {
+                status: 1,
+                words: []
+            };
+            
+            this.fireEvent('complete', dict);
         }
     });
 })();
