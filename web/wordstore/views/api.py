@@ -18,6 +18,7 @@ def iciba(word):
 def webster(word):
     u = user.get_user()
     url = 'http://www.dictionaryapi.com/api/v1/references/learners/xml/%s?key=%s' % (word, u.webster_key)
+    print url
     return get_xml(url)
 
 def get_xml(url):

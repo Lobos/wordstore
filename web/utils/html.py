@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import math, hashlib, urllib, urllib2, urlparse
 import pymongo
+from werkzeug.urls import url_fix
 from flask import request
 
 def get_page_size(total=1, size=20):
@@ -63,7 +64,8 @@ def get_avatar(id, email, size=48):
 
 def proxy(url):
     #url 不能为unicode，要转为utf-8
-    url = url.encode('utf-8')
+    #url = url.encode('utf-8')
+    url = url_fix(url)
     try:
         content = urllib2.urlopen(url, timeout=120).read()
         return content

@@ -416,6 +416,9 @@
                 method: 'get',
                 onSuccess: function (text, xml) {
                     this.parse(xml);
+                }.bind(this),
+                onFailure: function () {
+                    this.fireEvent('complete', {status:0});
                 }.bind(this)
             });
         },
