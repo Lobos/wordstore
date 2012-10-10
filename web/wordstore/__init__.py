@@ -5,8 +5,9 @@ from flask.ext.themes import setup_themes
 from flask.ext.mongokit import MongoKit
 from application import register_views, register_filters, register_db, set_logging, \
     configure_errorhandlers, configure_develop_handlers
-import config
+from config import DefaultConfig
 
+config = DefaultConfig()
 app = Flask(__name__)
 app.debug = config.DEBUG
 app.secret_key = config.SECRET_KEY

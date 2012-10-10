@@ -2,10 +2,11 @@
 
 import datetime
 from mongokit import Database, Connection
-import config
 from wordstore.models import User
+from config import DefaultConfig
 
 def init_db():
+    config = DefaultConfig()
     con = Connection(config.MONGODB_HOST, config.MONGODB_PORT)
     #con.drop_database(config.MONGODB_DATABASE)
     con.register(User)

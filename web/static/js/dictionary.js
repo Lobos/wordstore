@@ -441,6 +441,12 @@
                 status: 1,
                 words: []
             };
+            doc.getElements('entry').each(function (entry) {
+                var word = {
+                    word: entry.get('id')
+                };
+                dict.words.push(word);
+            });
             
             this.fireEvent('complete', dict);
         }
