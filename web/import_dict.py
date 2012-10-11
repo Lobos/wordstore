@@ -42,7 +42,7 @@ def import_phon():
         print w, p
         word = db.Dictionary.find_one({'word':w})
         if word:
-            word['phon'] = unicode(p, errors='ignore')
+            word['phon'] = unicode(p.rstrip(), errors='ignore')
             word.save()
 
 def get_db():
@@ -53,6 +53,6 @@ def get_db():
     return db
 
 if __name__ == '__main__':
-    #import_dict()
-    #import_inflections()
+    import_dict()
+    import_inflections()
     import_phon()

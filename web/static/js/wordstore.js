@@ -65,8 +65,8 @@
                 'html': data.word
             }).inject(dl);
 
-            if (data.pron) {
-                this.audio = new Audio(data.pron);
+            if (data.sound) {
+                this.audio = new Audio(data.sound);
                 new Element('i', {
                     'class': 'icon-audio',
                     'events': {
@@ -78,6 +78,7 @@
             }
 
             new Element('label', {'html': data.add_time}).inject(dt);
+            new Element('label', {'html': data.sent}).inject(dt);
 
             var buttons = new Element('span', {'class':'right'}).inject(dt);
             [['Remember', 'success'], ['Forget', 'forget']].each(function (d) {
@@ -94,10 +95,11 @@
             });
 
             var dd = new Element('dd').inject(dl).slide('hide');
-            new Element('p', {'html': '<span class="ps">[' + data.ps + ']</span>'}).inject(dd);
-            new Element('p', {'html': data.pos + ' ' + data.acceptation }).inject(dd);
-            if (data.orig)
-                new Element('p', {'html': data.orig + '<br />' + data.trans }).inject(dd);
+            new Element('p', {'html': '[' + data.phon + ']', 'class': 'phone'}).inject(dd);
+            new Element('p', {'html': data.pos, 'class': 'pos' }).inject(dd);
+            new Element('p', {'html': data.def }).inject(dd);
+            if (data.sent)
+                new Element('p', {'html': data.sent, 'class': 'sent' }).inject(dd);
             if (data.note)
                 new Element('p', {'html': data.note }).inject(dd);
 
@@ -160,14 +162,15 @@
                 'html': 'Wrong, try again.'
             }).fade('hide').inject(input_append, 'after');
 
-            new Element('label', {'html': data.acceptation}).inject(dt);
+            new Element('label', {'html': data.def}).inject(dt);
 
             var dd = new Element('dd').inject(dl).slide('hide');
             new Element('h3', {'html': data.word }).inject(dd);
-            new Element('p', {'html': '<span class="ps">[' + data.ps + ']</span><i class="icon-audio"></i>'}).inject(dd);
-            new Element('p', {'html': data.pos + ' ' + data.acceptation }).inject(dd);
-            if (data.orig)
-                new Element('p', {'html': data.orig + '<br />' + data.trans }).inject(dd);
+            new Element('p', {'html': '[' + data.phon + ']<i class="icon-audio"></i>', 'class': 'phone'}).inject(dd);
+            new Element('p', {'html': data.pos, 'class': 'pos' }).inject(dd);
+            new Element('p', {'html': data.def }).inject(dd);
+            if (data.sent)
+                new Element('p', {'html': data.sent, 'class': 'sent' }).inject(dd);
             if (data.note)
                 new Element('p', {'html': data.note }).inject(dd);
 
@@ -184,7 +187,7 @@
             }).inject(dd);
 
             dd.getElement('.icon-audio').addEvent('click', function () {
-                this.audio.play();
+                if (this.audio) this.audio.play();
             }.bind(this));
 
             var _counts = 0;
@@ -215,7 +218,7 @@
         show: function () {
             this.stage.addClass('active');
             this.stage.getElements(':disabled').removeProperty('disabled');
-            this.audio.play();
+            if (this.audio) this.audio.play();
             var text = this.stage.getElement('input[type="text"]');
             if (text) text.focus();
         }

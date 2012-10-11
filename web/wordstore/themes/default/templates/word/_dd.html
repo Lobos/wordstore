@@ -1,19 +1,19 @@
 <p>
-    [<span class="ps">{{ model.ps }}</span>]
+    {%- if model.phon -%}
+        [<span class="phon">{{ model.phon|safe }}</span>]
+    {%- endif -%}
+    {%- if model.sound -%}
     <i onclick="this.getFirst().play()" class="icon-audio">
-        <audio><source src="{{ model.pron }}" type="audio/mp3"></audio>
+        <audio><source src="{{ model.sound }}" type="audio/mp3"></audio>
     </i>
+    {%- endif -%}
 </p>
-<p>
-    {{ model.pos }} &nbsp;{{ model.acceptation }}
-</p>
-{%- if model.orig -%}
-<p>
-    {{ model.orig }}<br />
-    {{ model.trans }}
-</p>
+<p class="pos">{{ model.pos }}</p>
+<p>{{ model.def }}</p>
+{%- if model.sent -%}
+<p class="sent">{{ model.sent }}</p>
 {%- endif -%}
 {%- if model.note -%}
-    <p>{{ model.note }}</p>
+<p>{{ model.note }}</p>
 {%- endif -%}
 

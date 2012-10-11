@@ -23,7 +23,7 @@ def get_words():
 
     total = models.count()
     data = []
-    keys = [ 'word', 'ps', 'pron', 'pos', 'acceptation', 'orig', 'trans', 'note' ]
+    keys = [ 'word', 'sound', 'phon', 'pos', 'sent', 'def', 'note' ]
     for m in models.limit(config.PAGE_SIZE):
         w = {
             'id': str(m['_id']),

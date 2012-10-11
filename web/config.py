@@ -15,5 +15,5 @@ class DefaultConfig(object):
 
     ADMIN = [u'admin@example.com']
     MAX_WORDS = 300
-    BURY_HOURS = 8
+    BURY_HOURS = 0
     PAGE_SIZE = 10

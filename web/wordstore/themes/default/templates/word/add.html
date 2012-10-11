@@ -18,9 +18,9 @@
         (function () {
             var dict = new Dictionary('word_list', {
                 saveUrl: '{{ url_for(".add") }}',
-                alert: $g.alert,
                 api: [
-                    { id: 'webster', url: '{{ url_for("api.webster", word="") }}{word}' }
+                    //{ id: 'webster', url: '{{ url_for("api.webster", word="") }}{word}' }
+                    { id: 'dict', url: '{{ url_for("api.dct", word="") }}{word}' }
                 ],
                 onComplete: function () {
                     $('ta_words').set('value', '');

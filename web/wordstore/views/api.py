@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
-from flask import Blueprint, make_response
+from flask import Blueprint, make_response, jsonify
+from .. import db
 from ..helpers import user
 from . import render_json
 from utils import proxy
@@ -26,3 +27,24 @@ def get_xml(url):
     resp.mimetype = 'text/xml'
     return resp
 
+@bp.route('/api/dct/<word>')
+@user.require_login()
+def dct(word):
+    models = db.Dictionary.find({'inflections': word})
+    if models.count() == 0:
+        return render_json(u'word %s not found.' % word)
+
+    model = models[0]
+    for m in models:
+        if m['word'] == word:
+            model = m
+
+    json = {
+        'status': 1,
+        'word': model['word'],
+        'phon': model['phon'],
+        'sound': model['sound'],
+        'def': model['def']
+    }
+
+    return jsonify(json)

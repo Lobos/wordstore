@@ -92,6 +92,10 @@
                 if (msg) {
                     type = type || 'warning';
                     this.topMessager.getElement('.alert').set('html', msg).set('class', 'alert alert-' + type);
+                    new Element('button', {
+                        'html': '×',
+                        'class': 'close'
+                    }).inject(this.topMessager.getElement('.alert'), 'top');
                     this.topMessager.tween(-this.topMessager.outerHeight(), -1);
                 } else if (this.topMessager.getElement('.alert').get('text')) {
                     this.topMessager.tween(-this.topMessager.outerHeight(), -1);

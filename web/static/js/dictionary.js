@@ -10,7 +10,6 @@
         options: {
             saveUrl: null,
             timeOut: 180 * 1000,
-            alert: alert,
             api: []
         },
 
@@ -46,17 +45,6 @@
             } else {
                 this.fireEvent('complete');
             }
-
-            /*if (!el) {
-                this.fireEvent('complete');
-                return this;
-            }
-            el.addClass('active');
-            var next = el.getNext();
-            if (next)
-                this.prepare(next);
-            return this;
-            */
         },
 
         loadNext: function () {
@@ -64,227 +52,12 @@
             if (word) word.load();
         }
 
-        //=====================
-        /*createSingle: function (word) {
-            var outer = new Element('dl').inject(this.container).store('word', word);
-
-            var dt = new Element('dt', {
-                'html': word + '<i class="load"></i>'
-            }).inject(outer);
-
-            new Element('dd').inject(outer);
-        },
-        getApi: function (times) {
-            times = times || 0;
-            var apis = this.options.api;
-            var index = times % Object.getLength(apis);
-            var key = Object.keys(apis)[index];
-            return [key, apis[key]];
-        },
-        showFirst: function () {
-            var first = this.container.getFirst();
-            this.prepare(first).show(first);
-            return this;
-        },
-
-        prepare: function (el) {
-            var word = el.retrieve('word');
-            var times = el.retrieve('times') || 0;
-            var api = this.getApi(times);
-            this.createForm(el, api[0], api[1].substitute({'word': word}));
-            el.store('times', times+1);
-            return this;
-        },
-
-        createForm: function (el, api, url) {
-            var self = this;
-            var _control = function (label, temp, data, form) {
-                if (data.length == 0) return;
-                var ct_str = ('<div class="control-group">' +
-                    '<label class="control-label">{label}</label>' +
-                    '<div class="controls"></div>' +
-                    '</div>').substitute({label: label});
-                var ct = Elements.from(ct_str)[0].inject(form);
-                cc = ct.getElement('.controls');
-                data.each(function (d, i) {
-                    Object.merge(d, {
-                        check: i == 0 ? 'checked="checked"' : ''
-                    });
-                    var item = Elements.from(temp.substitute(d))[0].inject(cc);
-                    item.getElement('input').store('data', d);
-                });
-            };
-
-            var _createButtons = function (status, wrapper) {
-                var dis = function () {
-                    wrapper.getElements('button').set('disabled', 'disabled');
-                };
-                if (status == 1) {
-                    new Element('button', {
-                        'html': 'Submit',
-                        'type': 'button',
-                        'class': 'btn success',
-                        'events': {
-                            'click': function () {
-                                dis();
-                                self.saveWord(el);
-                            }
-                        }
-                    }).inject(wrapper);
-                    new Element('button', {
-                        'html': 'Reset',
-                        'type': 'button',
-                        'class': 'btn',
-                        'events': {
-                            'click': function () {
-                                el.getElements('input[type="radio"]').removeProperty('checked');
-                            }
-                        }
-                    }).inject(wrapper);
-                }
-
-                new Element('button', {
-                    'html': 'Retry',
-                    'type': 'button',
-                    'class': 'btn warning',
-                    'events': {
-                        'click': function () {
-                            dis();
-                            self.prepare(el);
-                        }
-                    }
-                }).inject(wrapper);
-
-                new Element('button', {
-                    'html': 'Drop',
-                    'type': 'button',
-                    'class': 'btn remove',
-                    'events': {
-                        'click': function () {
-                            dis();
-                            self.show(el.getNext());
-                            el.nix(true);
-                        }
-                    }
-                }).inject(wrapper);
-            };
-
-            var dd = el.getElement('dd').empty();
-            var loading = el.getElement('dt > .load');
-            loading.addClass('show');
-            this.exec(api, url, function (dict) {
-                loading.removeClass('show');
-                var form = new Element('form', {
-                    'class': 'form-horizontal'
-                }).inject(dd);
-
-                if (dict.status == 1) {
-                    var temp = '<label class="radio"><input type="radio" name="ps" {check} /><span class="ps">[{ps}]</span>' +
-                                '<i class="icon-audio"><audio><source src="{pron}" type="audio/mp3"></audio></i></label>';
-                    _control('读音', temp, dict.ps, form);
-
-                    temp = '<label class="radio"><input type="radio" name="pos" {check} />{pos} {acceptation}</label>';
-                    _control('释义', temp, dict.pos, form);
-
-                    temp = '<label class="radio"><input type="radio" name="sent" {check} />{orig}<br />{trans}</label>';
-                    _control('例句', temp, dict.sent, form);
-
-                    el.getElements('i.icon-audio').addEvent('click', function () {
-                        this.getElement('audio').play();
-                    });
-                }
-
-                var note = '<div class="control-group"><label class="control-label">笔记</label><div class="controls"><textarea rows="4" class="span6 note"></textarea></div></div>';
-                Elements.from(note)[0].inject(form);
-
-                note = '<div class="control-group"><label class="control-label"></label><div class="controls"></div></div>';
-                var btn_container = Elements.from(note)[0].inject(form);
-                _createButtons(dict.status, btn_container.getElement('.controls'));
-            });
-        },
-
-        saveWord: function (element) {
-            var data = {
-                word: element.retrieve('word'),
-                note: element.getElement('.note').get('value')
-            };
-            element.getElements('input[type="radio"]:checked').each(function (el) {
-                Object.merge(data, el.retrieve('data'));
-            });
-
-            if (this.options.saveUrl == null) return;
-            new Request.JSON({
-                url: this.options.saveUrl,
-                data: data,
-                onSuccess: function (json) {
-                    if (json.status == 1) {
-                        this.show(element.getNext());
-                        element.nix(true);
-                    } else {
-                        alert(json.msg);
-                    }
-                }.bind(this),
-                onFailure: function () {
-                    alert('系统出错了..')
-                }
-            }).send();
-        },
-
-        exec: function (api, url, fn) {
-            switch (api) {
-                case 'iciba':
-                    this.getIciba(url, fn);
-                    break;
-            }
-        },
-
-        getIciba: function(url, fn) {
-            var _ps = function (doc, keys) {
-                var lst = [];
-                doc.getElements(keys[0]).each(function (el) {
-                    var pp = {};
-                    pp[keys[0]] = el.get('text');
-                    if (keys[1]) pp[keys[1]] = el.getNext().get('text');
-                    lst.push(pp);
-                });
-                return lst;
-            };
-
-            var parse = function (xml) {
-                var doc = xml.documentElement;
-                var dict = {
-                    status: 1,
-                    key: doc.getElement('key').get('text'),
-                    ps: _ps(doc, ['ps', 'pron']),
-                    pos: _ps(doc, ['pos', 'acceptation']),
-                    sent: _ps(doc, ['orig', 'trans'])
-                };
-                return(dict);
-            };
-
-            new Request({
-                url: url,
-                timeout: this.options.timeout,
-                onSuccess: function (text, xml) {
-                    if (text == 'error') {
-                        fn({ status: 0 });
-                    } else {
-                        var dict = parse(xml);
-                        fn(dict);
-                    }
-                },
-                onFailure: function () {
-                    fn({ status: 0 });
-                }
-            }).get();
-        }*/
     });
 
     var _Word = new Class({
         Implements: [Events, Options],
 
         options: {
-            alert: alert,
             saveUrl: null,
             api: []
         },
@@ -308,7 +81,6 @@
 
         show: function () {
             this.element.addClass('active');
-            //this.createButtons(1, this.body);
             return this;
         },
 
@@ -320,30 +92,126 @@
         },
 
         getApi: function () {
-            var self = this;
             var a = this.options.api[this.times % this.options.api.length],
-                api, url;
+                url = a.url.substitute({word:this.word}),
+                api,
+                options = {
+                    onComplete: function (json) {
+                        this.head.getElement('.load').removeClass('show');
+                        if (json.status == 1)
+                            this.createBody(json);
+                        else
+                            this.createError(json);
+                    }.bind(this)
+                };
+
             switch (a.id) {
                 case 'webster':
-                    url = a.url.substitute({word: this.word});
-                    api = new _Api.Webster(url, {
-                        onComplete: function (json) {
-                            self.body.set('html', JSON.encode(json));
-                        }
-                    });
+                    api = _Api.Webster;
+                    break;
+                case 'dict':
+                    api = _Api.Dict;
                     break;
             }
-            return api;
+            return new api(url, options);
         },
 
-        drop: function () {
+        close: function () {
             this.element.nix(true);
             this.fireEvent('complete');
         },
 
-        parse: function () {},
+        createBody: function (json) {
+            this.data = json;
+            var dd = this.body;
+            new Element('h3', {
+                'html': json.word
+            }).inject(dd);
 
-        save: function () {},
+            new Element('p', {'html': '<span class="phon">[' + json.phon + ']</span><i class="icon-audio"></i>'}).inject(dd);
+            json.elements.inject(dd);
+
+            var _checked = 'checked';
+            dd.getElements('.sent, .def').addEvent('click', function () {
+                dd.getElements('.' + _checked).removeClass(_checked);
+                this.addClass(_checked);
+                if (this.hasClass('sent')) {
+                    this.getParent('p').getElement('.def').addClass(_checked);
+                } else {
+                    var next = this.getNext('span');
+                    if (next && next.hasClass('sent'))
+                        next.addClass(_checked);
+                }
+                var pos = this.getPrevious('.pos');
+                if (!pos) pos = this.getParent('p').getPrevious('p span.pos');
+                if (pos) pos.addClass(_checked);
+            });
+            dd.getElements('.pos').addEvent('click', function () {
+                dd.getElements('.pos').removeClass(_checked);
+                this.addClass(_checked);
+            });
+
+            new Element('textarea', {
+                'class': 'span6',
+                'name': 'note',
+                'rows': 3
+            }).inject(dd);
+
+            this.alertHandle = new Element('p', {
+                'class': 'alert alert-error'
+            }).inject(dd);
+            this.alertHandle.dissolve();
+
+            var p = new Element('p').inject(dd);
+            this.createButtons(1, p);
+        },
+
+        createError: function (json) {
+            this.alert(json.msg);
+            this.createButtons(json.status, this.body);
+        },
+
+        alert: function (msg) {
+            var _alert = document.id(this.alertHandle);
+            if (!_alert) {
+                _alert = new Element('label', {
+                    'html': msg,
+                    'class': 'alert alert-error'
+                }).inject(this.body);
+            } else {
+                _alert.set('html', msg);
+            }
+
+            _alert.reveal();
+        },
+
+        save: function () {
+            var _get = function (name) {
+                var el = this.body.getElement('span.' + name + '.checked');
+                return el ? el.get('html') : '';
+            }.bind(this);
+            var data = {
+                word: this.data.word,
+                phon: this.data.phon,
+                sound: this.data.sound,
+                pos: _get('pos'),
+                def: _get('def'),
+                sent: _get('sent'),
+                note: this.body.getElement('textarea').get('value')
+            };
+            new Request.JSON({
+                url: this.options.saveUrl,
+                data: data,
+                onSuccess: function (json) {
+                    if (json.status == 1) {
+                        this.close();
+                    } else {
+                        this.body.getElements('button').removeProperty('disabled');
+                        this.alert(json.msg);
+                    }
+                }.bind(this)
+            }).send();
+        },
 
         createButtons: function (status, wrapper) {
             var self = this;
@@ -362,7 +230,7 @@
                         }
                     }
                 }).inject(wrapper);
-                new Element('button', {
+                /*new Element('button', {
                     'html': 'Reset',
                     'type': 'button',
                     'class': 'btn',
@@ -371,7 +239,7 @@
                             self.body.getElements('input[type="radio"]').removeProperty('checked');
                         }
                     }
-                }).inject(wrapper);
+                }).inject(wrapper);*/
             }
 
             new Element('button', {
@@ -393,7 +261,7 @@
                 'events': {
                     'click': function () {
                         dis();
-                        self.drop();
+                        self.close();
                     }
                 }
             }).inject(wrapper);
@@ -429,6 +297,72 @@
 
         load: function () {
             this.getRequest().send();
+        }
+    });
+
+    _Api.Dict = new Class({
+        Implements: [_Api],
+
+        getRequest: function () {
+            return new Request.JSON({
+                url: this.url,
+                method: 'get',
+                onSuccess: function (json) {
+                    if (json.status == 0)
+                        this.fireEvent('complete', json);
+                    else
+                        this.parse(json);
+                }.bind(this),
+                onFailure: function () {
+                    this.fireEvent('complete', {status:0, msg:'error'});
+                }.bind(this)
+            });
+        },
+
+        parse: function (json) {
+            var el = new Element('div');
+            var ig = /^\s+\d.*(:$|----------\/\/$|]\/\/$)/;
+
+            var _sent = function (line, i) {
+                var arr = [];
+                if (line.trim().length == 0) return arr;
+                var index = line.indexOf('  --');
+                var pos = i === 0 ? 'pos' : 'def';
+                if (pos == 'def') {
+                    var re = new RegExp('^\\s?' + json.word + '\\s+\\d');
+                    if (re.test(line)) pos = 'pos';
+                }
+
+                if (index < 0) {
+                    arr.push('<span class="{0}">{1}</span>'.format(pos, line));
+                } else if (index == 0) {
+                    line = line.replace('  --', '');
+                    index = line.indexOf('  --');
+                    arr.push('<span class="sent">--{0}</span>'.format(index < 0 ? line: line.substring(0, index)));
+                    if (index > 0) arr.append(_sent(line.substring(index)));
+                } else {
+                    arr.push('<span class="{0}">{1}</span>'.format(pos, line.substring(0, index)));
+                    arr.append(_sent(line.substring(index)));
+                }
+                return arr;
+            };
+
+            json.def.split('\\n').each(function (t, i) {
+                if (ig.test(t)) return;
+                t = t.replace('----------//', '');
+                if (t.test(/\/\//))
+                    t = t.substring(0, t.length - 2);
+
+                var newt = [];
+                t.split('//').each(function (line, j) {
+                    newt.append(_sent(line, i));
+                });
+
+                new Element('p', { html: newt.join('<br />') }).inject(el);
+            });
+
+            json.elements = el.getChildren();
+            this.fireEvent('complete', json);
         }
     });
 

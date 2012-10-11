@@ -18,12 +18,11 @@ def add():
     f = request.form
     model = db.Word()
     model['word'] = f.get('word')
-    model['ps'] = f.get('ps')
-    model['pron'] = f.get('pron')
+    model['sound'] = f.get('sound')
+    model['phon'] = f.get('phon')
     model['pos'] = f.get('pos')
-    model['acceptation'] = f.get('acceptation')
-    model['orig'] = f.get('orig')
-    model['trans'] = f.get('trans')
+    model['sent'] = f.get('sent')
+    model['def'] = f.get('def')
     model['note'] = f.get('note')
     model['user_id'] = user.get_user().id
     model['add_time'] = cn_time_now()

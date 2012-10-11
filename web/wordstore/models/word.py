@@ -6,8 +6,8 @@ from . import ObjectId
 class Word(Document):
     __collection__ = 'word'
     structure = {
-        'word': unicode,
         'user_id': ObjectId,
+        'word': unicode,
         'sound': unicode,
         'phon': unicode,
         'pos': unicode,

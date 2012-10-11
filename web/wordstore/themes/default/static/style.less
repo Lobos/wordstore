@@ -280,7 +280,7 @@
       padding: 8px 0;
       margin: 0;
       color: #666;
-      font-size: 12px;
+      font-size: 14px;
       border-top: 1px dashed #ddd;
       &:last-child {
         border-bottom: 1px dashed #ddd;
@@ -334,6 +334,7 @@
         margin: 0 0 0 14px;
         padding: 10px 0;
         position: relative;
+        margin: 0;
         &:not(.active) { display: none; }
 
         .control-label {
@@ -345,8 +346,22 @@
           margin-left: 50px;
         }
 
-        .ps {
+        .phon {
           font-family: "lucida sans unicode",arial;
+        }
+
+        span {
+          cursor: pointer;
+        }
+        .pos {
+          font-weight: bold;
+        }
+        .sent {
+          color: @blue;
+          margin-left: 12px;
+        }
+        .checked {
+          background-color: @yellow;
         }
       }
 
