@@ -22,6 +22,7 @@ def register_filters(app):
     app.jinja_env.filters['fmt_checked'] = filters.fmt_checked
     app.jinja_env.filters['markdown'] = string.markdown
     app.jinja_env.filters['truncate'] = string.truncate
+    app.jinja_env.filters['get_ext'] = string.get_ext
 
     from utils import get_uid, get_gravatar, get_avatar, tree_root_id
     app.jinja_env.globals['get_uid'] = get_uid

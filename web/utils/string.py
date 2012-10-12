@@ -63,3 +63,8 @@ def md5(str):
 def markdown(str, safe_mode=False):
     md = Markdown(safe_mode=safe_mode)
     return md.convert(str)
+
+def get_ext(str):
+    if not str or ('.' not in str):
+        return ''
+    return str.rsplit('.', 1)[1]

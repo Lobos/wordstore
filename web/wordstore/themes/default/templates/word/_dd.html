@@ -4,7 +4,7 @@
     {%- endif -%}
     {%- if model.sound -%}
     <i onclick="this.getFirst().play()" class="icon-audio">
-        <audio><source src="{{ model.sound }}" type="audio/mp3"></audio>
+        <audio><source src="{{ model.sound }}" type="audio/{{ model.sound|get_ext }}"></audio>
     </i>
     {%- endif -%}
 </p>
