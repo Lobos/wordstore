@@ -1112,9 +1112,10 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .body .word-list dl dd .control-label{width:30px;text-align:left;}
 .body .word-list dl dd .controls{margin-left:50px;}
 .body .word-list dl dd .phon{font-family:"lucida sans unicode",arial;}
+.body .word-list dl dd h3,.body .word-list dl dd p{margin-left:14px;}
 .body .word-list dl dd span{cursor:pointer;}
 .body .word-list dl dd .pos{font-weight:bold;}
-.body .word-list dl dd .sent{color:#049cdb;margin-left:12px;}
+.body .word-list dl dd .sent{color:#049cdb;margin-left:12px;font-style:italic;}
 .body .word-list dl dd .checked{background-color:#ffc40d;}
 .body .word-list dl .btn{margin-right:10px;}.body .word-list dl .btn.remove{color:#ffffff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);background-color:#363636;background-image:-moz-linear-gradient(top, #444444, #222222);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#444444), to(#222222));background-image:-webkit-linear-gradient(top, #444444, #222222);background-image:-o-linear-gradient(top, #444444, #222222);background-image:linear-gradient(to bottom, #444444, #222222);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff444444', endColorstr='#ff222222', GradientType=0);border-color:#222222 #222222 #000000;border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);*background-color:#222222;filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);}.body .word-list dl .btn.remove:hover,.body .word-list dl .btn.remove:active,.body .word-list dl .btn.remove.active,.body .word-list dl .btn.remove.disabled,.body .word-list dl .btn.remove[disabled]{color:#ffffff;background-color:#222222;*background-color:#151515;}
 .body .word-list dl .btn.remove:active,.body .word-list dl .btn.remove.active{background-color:#080808 \9;}

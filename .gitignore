@@ -36,4 +36,4 @@ nbproject
 /run.bat
 debug-script.js
 
-web/data/*
+data/*
