@@ -355,7 +355,7 @@
 
                 var newt = [];
                 t.split('//').each(function (line, j) {
-                    newt.append(_sent(line, i));
+                    newt.append(_sent(line, i+j));
                 });
 
                 new Element('p', { html: newt.join('<br />') }).inject(el);
