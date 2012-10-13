@@ -38,7 +38,7 @@ def add():
 @user.require_login()
 def mine():
     u = user.get_user()
-    models = db.Word.find({ 'user_id': u.id })
+    models = db.Word.find({ 'user_id': u.id }).sort('word')
     return render('word/mine.html', models = models)
 
 

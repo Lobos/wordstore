@@ -227,6 +227,10 @@
 
         createButtons: function (status, wrapper) {
             var self = this;
+            this.body.removeEvents('dblclick');
+            this.body.addEvent('dblclick', function () {
+                new Fx.Scroll(window).toElement(wrapper);
+            });
             var dis = function () {
                 wrapper.getElements('button').set('disabled', 'disabled');
             };
