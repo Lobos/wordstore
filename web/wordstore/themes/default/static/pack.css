@@ -762,7 +762,6 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .body .word-list dl dd .controls{margin-left:50px;}
 .body .word-list dl dd .phon{font-family:"lucida sans unicode",arial;}
 .body .word-list dl dd h3,.body .word-list dl dd p{margin-left:14px;}
-.body .word-list dl dd span{cursor:pointer;}
 .body .word-list dl dd .pos{font-weight:bold;}
 .body .word-list dl dd .sent{color:#049cdb;margin-left:12px;font-style:italic;}
 .body .word-list dl dd .checked{background-color:#ffc40d;}

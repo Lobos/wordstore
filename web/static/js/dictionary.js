@@ -81,6 +81,7 @@
 
         show: function () {
             this.element.addClass('active');
+            new Fx.Scroll(window).toTop();
             return this;
         },
 
