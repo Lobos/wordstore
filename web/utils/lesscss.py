@@ -42,5 +42,5 @@ def _create_css(less_path):
         css_mtime = os.path.getmtime(css_path)
 
     if less_mtime >= css_mtime:
-        subprocess.call(['node', 'tools/less/bin/lessc', less_path, css_path, '-x'], shell=False)
+        os.system('lessc %s %s -x' % (less_path, css_path))
 

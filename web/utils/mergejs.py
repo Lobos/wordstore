@@ -13,14 +13,14 @@ JS_LIST = {
         LAB_COMMON + 'mootools-more-1.4.0.1.js',
         LAB_COMMON + 'mootools-exts.js',
         LAB_COMMON + 'form-validator.js',
-        LAB_COMMON + 'dictionary.js',
-        LAB_COMMON + 'wordstore.js',
+        LAB_LOCAL + 'dictionary.js',
+        LAB_LOCAL + 'wordstore.js',
         LAB_LOCAL + 'global.js',
     ]
 }
 
 def compress(app):
-    common_path = 'static/js/'
+    common_path = 'script/js/'
     js_path = os.sep.join([app.root_path, 'static', 'js', ''])
     js_list = [f.replace(LAB_COMMON, common_path).replace(LAB_LOCAL, js_path) for f in JS_LIST[app.name]]
     script_debug = (js_path + SCRIPTS_OUT_DEBUG) if app.debug else '.temp'
