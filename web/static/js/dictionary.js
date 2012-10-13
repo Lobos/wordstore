@@ -128,7 +128,18 @@
                 'html': json.word
             }).inject(dd);
 
-            new Element('p', {'html': '<span class="phon">[' + json.phon + ']</span><i class="icon-audio"></i>'}).inject(dd);
+            var ps = new Element('p', {'html': '<span class="phon">[' + json.phon + ']</span>'}).inject(dd);
+            if (json.sound) {
+                var audio = this.audio = new Audio(json.sound);
+                new Element('i', {
+                    'class': 'icon-audio',
+                    'events': {
+                        'click': function () {
+                            audio.play();
+                        }
+                    }
+                }).inject(ps);
+            }
             json.elements.inject(dd);
 
             var _checked = 'checked';
