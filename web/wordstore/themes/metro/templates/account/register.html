@@ -1,0 +1,52 @@
+{% extends theme('base.html') %}
+{% import theme('_forms.html') as f %}
+{% block title %}注册{% endblock %}
+{% block body %}
+    <div class="title-bar">
+        <h3>注册账号</h3>
+    </div>
+    <div class="content">
+    {% call f.form('register_form') %}
+        {% call f.control('邮箱', ' ') %}
+            {{ f.input(name="email", validate="{required:true, type:'email', ajax:{url:'%s'}}" % url_for(".check_email")) }}
+        {% endcall %}
+
+        {% call f.control('昵称', '最长9个汉字，18个英文字符') %}
+            {{ f.input(name="nickname", validate="{required:true, maxlen: 18}") }}
+        {% endcall %}
+
+        {% call f.control('密码', '英文字母、符号或数字，6-18位') %}
+            {{ f.input(name="password", id="password", type="password", validate="{required:true, type: 'password', minlen: 6, maxlen:18}") }}
+        {% endcall %}
+
+        {% call f.control('重复密码', ' ') %}
+            {{ f.input(type="password", validate="{required:true, equal:'password', title:'密码'}") }}
+        {% endcall %}
+
+        {% call f.control('邀请码', ' ') %}
+            {{ f.input(name="invitation", validate="{required:true, ajax:{url:'%s'}}" % url_for('.check_invitation')) }}
+        {% endcall %}
+
+        {% call f.control(' ') %}
+            <button type="submit" id="btn_register" class="btn btn-primary">注 册</button>
+        {% endcall %}
+    {% endcall %}
+    </div>
+    <script type="text/javascript">
+        window.addEvent('domready', function () {
+            var validator = $g.initValidator('register_form');
+            $('btn_register').addEvent('click', function (event) {
+                event.preventDefault();
+                $g.saveForm({
+                    button: this,
+                    form: 'register_form',
+                    validator: validator,
+                    url: '{{ url_for(".register") }}',
+                    success: function (json) {
+                        location.href = '{{ url_for("home.index") }}';
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

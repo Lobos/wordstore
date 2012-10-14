@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>{% block title %}单词仓库{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <link href="{{ theme_static('pack.css') }}" rel="stylesheet" />
+    {%- block style %}{% endblock -%}
+    <script type="text/javascript" src="{{ main_script_url() }}"></script>
+    {%- block script %}{% endblock %}
+</head>
+<body>
+    <div class="header">
+        <div class="menu-wrapper">
+            <a href="{{ url_for('home.index') }}" class="logo">
+                单词仓库
+            </a>
+            {%- set nav_bar = [
+                ('mine', url_for('word.mine'), 'Word List'),
+                ('add', url_for('word.add'), 'New Words'),
+            ] -%}
+            <ul class="menu unstyled">
+                {%- for id, href, caption in nav_bar -%}
+                    <li><a {% if id == active_nav %}class="checked" {% endif %}href="{{ href }}">{{ caption }}</a></li>
+                {%- endfor -%}
+            </ul>
+
+            {% set user = get_user() %}
+            <ul id="top_user_info" class="user unstyled">
+                {% if user %}
+                    <li><span>{{ user.nickname }}</span></li>
+                    <li class="info-handle" style="position: relative;">
+                        {% set avatar = get_avatar(user.id, user.email, 96) %}
+                        <img class="avatar-small" src="{{ avatar }}" />
+                        <i class="icon-carat-1-s icon-white"></i>
+                        <div class="pop-panel">
+                            <a href="javascript:;" class="avatar"><img src="{{ avatar }}" alt="{{ user.nickname }}"></a>
+                            <label>{{ user.nickname }}</label>
+                            {{ user.email }}
+                            <div class="btns">
+                                <a href="{{ url_for('account.profile') }}" class="btn btn-primary">My Profile</a>
+                                <a href="{{ url_for('account.logout') }}" class="btn">Log out</a>
+                            </div>
+                        </div>
+                    </li>
+                {% else %}
+                    <li><a href="{{ url_for('account.login') }}?next={{ request.path }}">Login</a></li>
+                    <li><a href="{{ url_for('account.register') }}">Register</a></li>
+                {% endif %}
+            </ul>
+            <script type="text/javascript">
+                (function () {
+                    var ul = $('top_user_info');
+                    var el = ul.getElement('.pop-panel');
+                    var show = function () {
+                        el.setStyle('display', 'block');
+                        document.body.addEvent('click', _hide);
+                    };
+                    var hide = function () {
+                        el.setStyle('display', 'none');
+                        document.body.removeEvent('click', _hide);
+                    };
+                    var _hide = function (event) {
+                        if (ul.contains(event.target))
+                            return;
+                        hide();
+                    };
+                    ul.getElements('.info-handle').addEvent('click', function (event) {
+                        if (el.contains(event.target)) return;
+                        if (el.isVisible()) hide();
+                        else show();
+                    });
+                })();
+            </script>
+        </div>
+
+        <div class="clear"></div>
+    </div>
+    <div class="body">
+    {%- block body %}{% endblock -%}
+    </div>
+    <div id="top_message_wrapper" class="top-messager">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category or 'warning' }}">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning">{% block alert %}{% endblock %}</div>
+            {% endif %}
+        {% endwith %}
+        <script type="text/javascript">
+            window.addEvent('domready', function () {
+                $g.initAlert('top_message_wrapper');
+            });
+        </script>
+    </div>
+    <div class="footer">
+        <div class="text">
+            Copyleft: Lobos 2012  Powered by flask, bootstrap, lesscss, mootools
+        </div>
+    </div>
+</body>
+</html>

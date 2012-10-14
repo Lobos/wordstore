@@ -1,0 +1,30 @@
+{%- extends theme('base.html') -%}
+{%- import theme('_context.html') as h -%}
+{% block body %}
+    {% call h.title('Invitation') %}{% endcall %}
+    <button id="btn_generate" type="button" class="btn btn-primary">Generate</button>
+    <div class="content" id="code_list">
+        {% for m in models %}
+        <span class="span3">{{ m.code }}</span>
+        {% endfor %}
+    </div>
+    <script type="text/javascript">
+        (function () {
+            $('btn_generate').addEvent('click', function () {
+                new Request.JSON({
+                    url: '{{ url_for(".invitation_generate") }}',
+                    onSuccess: function (json) {
+                        if (json.status == 1) {
+                            new Element('span', {
+                                'html': json.msg,
+                                'class': 'span3'
+                            }).inject('code_list');
+                        } else {
+                            $g.alert(json.msg);
+                        }
+                    }
+                }).send();
+            });
+        })();
+    </script>
+{% endblock %}
