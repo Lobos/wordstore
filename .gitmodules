@@ -3,4 +3,4 @@
 	url = git@github.com:Lobos/myjs.git
 [submodule "web/wordstore/themes/metro/static/metro"]
 	path = web/wordstore/themes/metro/static/metro
-	url = git@github.com:Lobos/metro-ui.git
+	url = git@github.com:Lobos/metro-bootstrap.git
