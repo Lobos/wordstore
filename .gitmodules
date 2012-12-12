@@ -1,3 +1,6 @@
 [submodule "web/script"]
 	path = web/script
 	url = git@github.com:Lobos/moo-js.git
+[submodule "web/static/mooui-js"]
+	path = web/static/mooui-js
+	url = git@github.com:Lobos/mooui-js.git

@@ -4,14 +4,14 @@
     <title>{% block title %}单词仓库{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
-    <link href="{{ theme_static('pack.css') }}" rel="stylesheet" />
+    <link href="{{ theme_static('style.css') }}" rel="stylesheet" />
     {%- block style %}{% endblock -%}
     <script type="text/javascript" src="{{ main_script_url() }}"></script>
     {%- block script %}{% endblock %}
 </head>
 <body>
     <div class="header">
-        <div class="menu-wrapper">
+        <div class="menu-wrapper container">
             <a href="{{ url_for('home.index') }}" class="logo">
                 单词仓库
             </a>
@@ -76,7 +76,7 @@
 
         <div class="clear"></div>
     </div>
-    <div class="body">
+    <div class="body container">
     {%- block body %}{% endblock -%}
     </div>
     <div id="top_message_wrapper" class="top-messager">
@@ -99,7 +99,7 @@
         </script>
     </div>
     <div class="footer">
-        <div class="text">
+        <div class="container">
             Copyleft: Lobos 2012  Powered by flask, bootstrap, lesscss, mootools
         </div>
     </div>

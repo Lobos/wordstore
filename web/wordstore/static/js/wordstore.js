@@ -77,7 +77,7 @@
                 }).inject(dt);
             }
 
-            new Element('label', {'html': data.add_time}).inject(dt);
+            new Element('label', {'html': data.add_time, 'class': 'time'}).inject(dt);
             new Element('label', {'html': data.sent}).inject(dt);
 
             var buttons = new Element('span', {'class':'right'}).inject(dt);

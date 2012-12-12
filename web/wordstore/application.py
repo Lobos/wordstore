@@ -35,17 +35,11 @@ def register_filters(app):
     app.jinja_env.globals['get_user'] = get_user
 
 def configure_develop_handlers(app):
-    @app.before_request
-    def _init_less():
-        from utils.lesscss import lesscss
-        if request.url.endswith('.css'):
-            lesscss(app)
+    from flaskext.assets import set_less_handlers, set_js_handlers
+    set_less_handlers(app)
 
-    @app.before_request
-    def _init_js():
-        from utils.mergejs import compress
-        if request.url.endswith('pack-script.js') or request.url.endswith('debug-script.js'):
-            compress(app)
+    from helpers import get_script_list
+    set_js_handlers(app, get_script_list())
 
 def configure_errorhandlers(app):
     from views import render, render_json
