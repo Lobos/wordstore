@@ -86,4 +86,3 @@ def finish():
         return render_success()
     except Exception, e:
         abort(404)
-

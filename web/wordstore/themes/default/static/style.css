@@ -725,6 +725,7 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .formcheck-box a.close{margin-left:5px;}
 .container{width:767px;margin:0 auto;}
 @media (max-width:767px){.container{width:auto;margin:0 20px;}}.mask{opacity:0.2;filter:alpha(opacity=20);background:#999999;}
+.btn-file{overflow:hidden;position:relative;}.btn-file input{position:absolute;left:0;top:0;opacity:0;filter:alpha(opacity=0);}
 .clear{clear:both;height:0;overflow:hidden;}
 .mask-loading{opacity:0.4;filter:alpha(opacity=40);background:#ffffff url(images/loading.gif) no-repeat center;}
 .header{height:42px;background-color:#2d2d2d;width:100%;z-index:998;-webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.3);box-shadow:0 1px 3px rgba(0, 0, 0, 0.3);position:fixed;top:0;}.header .menu-wrapper{position:relative;}.header .menu-wrapper .logo{position:absolute;left:0;top:0;color:#fff;font-size:20px;font-weight:bold;line-height:42px;}

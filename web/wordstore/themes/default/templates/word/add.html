@@ -11,6 +11,10 @@
         </div>
         <div class="control-group">
             <button type="button" id="btn_words" class="btn btn-primary">Submit</button>
+            <a href="javascript:;" class="btn btn-success btn-file">
+                <input type="file" id="file_words" accept="text/*" />
+                Import words
+            </a>
         </div>
     </div>
     <div class="content word-list" id="word_list"></div>
@@ -39,6 +43,14 @@
 
                 $('add_form').slide('out');
                 dict.addWords(words).show();
+            });
+            $('file_words').addEvent('change', function () {
+                var file = this.files[0];
+                var reader = new FileReader();
+                reader.onload = function(e){
+                    $('ta_words').set('value', e.target.result);
+                };
+                reader.readAsText(file);
             });
         })();
     </script>
