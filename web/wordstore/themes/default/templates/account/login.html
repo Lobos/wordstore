@@ -29,8 +29,8 @@
         (function () {
             $('email').focus();
             var validator = $g.initValidator('login_form', { successHtml: '' });
-            $('btn_login').addEvent('click', function (event) {
-                event.preventDefault();
+            $('login_form').addEvent('submit', function (event) {
+                event.preventDefault ? event.preventDefault() : event.returnValue = false;
                 $g.saveForm({
                     button: this,
                     form: 'login_form',

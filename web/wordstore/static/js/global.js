@@ -20,7 +20,7 @@
             options = Object.merge({
                 successHtml: '<i class="icon-check"></i>'
             }, options);
-            var formValidator = new Form.Validator(form, {
+            var formValidator = new MooUI.Validator(form, {
                 evaluateOnBlur: false,
                 onSuccess: function (el) {
                     var parent = el.getParent('.control-group');
