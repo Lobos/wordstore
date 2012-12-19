@@ -10,7 +10,7 @@
             A line of a word or phrase
         </div>
         <div class="control-group">
-            Import words: <input type="file" style="width:100px;" id="file_words" />
+            Import words: <input type="file" id="file_words" />
         </div>
         <div class="control-group">
             <button type="button" id="btn_words" class="btn btn-primary">Submit</button>
@@ -47,7 +47,8 @@
                 var file = this.files[0];
                 var reader = new FileReader();
                 reader.onload = function(e){
-                    $('ta_words').set('value', e.target.result);
+                    var txt = e.target.result.stripTags().replace(/^[\r\n\s]+/, '').replace(/[\r\n]\s+|\s+$/g, '\n');
+                    $('ta_words').set('value', txt);
                 };
                 reader.readAsText(file);
             });
