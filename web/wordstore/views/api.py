@@ -30,6 +30,7 @@ def get_xml(url):
 @bp.route('/api/dct/<word>')
 @user.require_login()
 def dct(word):
+    word = word.lower()
     models = db.Dictionary.find({'inflections': word})
     if models.count() == 0:
         return render_json(u'word %s not found.' % word)
